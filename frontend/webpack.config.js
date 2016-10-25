@@ -2,14 +2,14 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: "./js/app.jsx",
+    entry: ['babel-polyfill',"./js/app.jsx"],
     output: {
         path: path.resolve(__dirname, "build"),
         filename: "bundle.js"
     },
     plugins: [new HtmlWebpackPlugin({
         title: 'Joggr.io!',
-        inject: 'head',
+         template: 'index.ejx',
     })],
     resolve: {
         alias: {
