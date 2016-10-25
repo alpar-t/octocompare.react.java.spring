@@ -1,5 +1,6 @@
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
     entry: ['babel-polyfill',"./js/app.jsx"],
@@ -7,10 +8,13 @@ module.exports = {
         path: path.resolve(__dirname, "build"),
         filename: "bundle.js"
     },
-    plugins: [new HtmlWebpackPlugin({
+    plugins: [
+	  new HtmlWebpackPlugin({
         title: 'Joggr.io!',
          template: 'index.ejx',
-    })],
+      }),
+      new ExtractTextPlugin('bundle.css'),
+    ],
     resolve: {
         alias: {
             joggr: path.resolve(__dirname, 'js')
@@ -30,7 +34,19 @@ module.exports = {
             comments: false,
             babelrc: false
           }
-        }
+        },
+        {
+          test: /\.css$/,
+          loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+        },
+        {
+          test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+        },
+        {
+          test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'file-loader'
+        },  
       ]
     }
 }
