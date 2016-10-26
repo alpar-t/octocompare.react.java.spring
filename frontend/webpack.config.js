@@ -3,10 +3,10 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
-    entry: ['babel-polyfill',"./js/app.jsx"],
+    entry: ['babel-polyfill', 'normalize.css/normalize.css', './js/app.jsx'],
     output: {
-        path: path.resolve(__dirname, "build"),
-        filename: "bundle.js"
+        path: path.resolve(__dirname, 'build'),
+        filename: 'bundle.js'
     },
     plugins: [
 	  new HtmlWebpackPlugin({
