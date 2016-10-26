@@ -50,6 +50,7 @@
     "react-fa": "^4.1.2",
     "react-moment": "0.0.2",
     "react-tap-event-plugin": "^1.0.0",
+    "recharts": "^0.15.2",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7"
   }

@@ -9,6 +9,14 @@ import { Toolbar, ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar';
 import AddEditDialog from 'joggr/components/AddEditDialog';
 import JogEntry from 'joggr/components/JogEntry';
 
+import { LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
+
+const data = [
+      { week: 1, speed: 4.4 },
+      { week: 2, speed: 9.1 },
+      { week: 3, speed: 11.3 },
+];
+
 const JoggingList = ({ activities }) => <Paper
   style={{ padding: '2ex', margin: '1ex' }}
 >
@@ -41,6 +49,21 @@ const JoggingList = ({ activities }) => <Paper
       </ToolbarGroup>
     </Toolbar>
   </div>
+
+  <Paper style={{ marginTop: '2ex', padding: 20 }}>
+    <LineChart
+      width={900}
+      height={200}
+      data={data}
+      margin={{ top: 30, right: 80, left: 30, bottom: 30 }}
+    >
+      <Tooltip />
+      <XAxis dataKey="week" label="week of year" />
+      <YAxis label="speed" />
+      <Line type="monotone" dataKey="speed" stroke="#82ca9d" />
+    </LineChart>
+  </Paper>
+
   {activities.map(activity =>
     <JogEntry {...activity} key={activity.id} />
   )}

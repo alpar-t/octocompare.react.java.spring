@@ -32,6 +32,10 @@ Developer Notes
 Front End
 ---------
 
+No pagination: TODO: why
+ 
+No router: TODO: why
+
 Back End
 --------
 
