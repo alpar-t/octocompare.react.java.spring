@@ -7,7 +7,6 @@ import { colors } from 'material-ui/styles';
 import Formsy from 'formsy-react';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
 import FormsyDate from 'formsy-material-ui/lib/FormsyDate';
-import FormsyTime from 'formsy-material-ui/lib/FormsyTime';
 
 import JogEntry from 'joggr/components/JogEntry';
 
@@ -37,6 +36,7 @@ export default class AddEditDialog extends React.Component {
 
   handleSubmit() {
     if (this.state.valid) {
+      this.props.onAddOrEdit(this.state.model);
       this.handleClose();
     }
   }
@@ -110,4 +110,5 @@ export default class AddEditDialog extends React.Component {
 }
 AddEditDialog.propTypes = {
   activity: React.PropTypes.shape(JogEntry.propTypes),
+  onAddOrEdit: React.PropTypes.func,
 };

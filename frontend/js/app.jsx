@@ -2,46 +2,83 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Paper from 'material-ui/Paper';
+import { colors } from 'material-ui/styles';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import moment from 'moment';
+import { Provider, connect } from 'react-redux';
 
 import TopBar from 'joggr/components/TopBar';
-import JoggingList from 'joggr/components/JoggingList';
+import Toolbar from 'joggr/components/Toolbar';
+import WeeklyReport from 'joggr/components/WeeklyReport';
+import JogEntryList from 'joggr/components/JogEntryList';
+import { store, pushJogEntry, removeJogEntry } from 'joggr/state';
 
 // Needed for onTouchTap
 // Check: https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
-const AppTemplate = () => <div style={{ maxWidth: '1200px' }}>
+const ConnectedJogEntryList = connect(state => ({
+  activities: state.jogEntries.orderByDate().reverse(),
+}))(JogEntryList);
+
+const ConnectedWeeklyReport = connect(state => ({
+  expanded: state.options.showReport,
+}))(WeeklyReport);
+
+const ConnectedToolbar = connect(({
+    options: {
+      showReport,
+      filterDateFrom,
+      filterDateTo,
+    },
+  }) => ({
+    showReport,
+    filterDateFrom,
+    filterDateTo,
+  })
+)(Toolbar);
+
+const AppTemplate = ({ dispatch }) => <div style={{ maxWidth: '1200px' }}>
   <TopBar />
-  <JoggingList
-    activities={[
-      {
-        id: '1',
-        date: moment().add(-2, 'days'),
-        distanceMeters: 6000,
-        timeSeconds: 36 * 60,
-      },
-      {
-        id: '2',
-        date: moment().add(-4, 'days'),
-        distanceMeters: 4000,
-        timeSeconds: 26 * 60,
-      },
-      {
-        id: '3',
-        date: moment().add(-6, 'days'),
-        distanceMeters: 8000,
-        timeSeconds: 46 * 60,
-      },
-    ]}
-  />
+  <Paper style={{ padding: '2ex', margin: '1ex' }}>
+    <h1 style={{ color: colors.grey700 }}>
+      Logged activities
+    </h1>
+
+    <ConnectedToolbar
+      onAddOrEdit={
+        (entry) => {
+          dispatch(pushJogEntry(entry));
+        }
+      }
+    />
+    <ConnectedWeeklyReport
+      data={[
+          { week: 1, speed: 4.4 },
+          { week: 2, speed: 9.1 },
+          { week: 3, speed: 11.3 },
+      ]}
+    />
+    <ConnectedJogEntryList
+      onRemove={(activity) => {
+        dispatch(removeJogEntry(activity));
+      }}
+    />
+  </Paper>
 </div>;
+
+AppTemplate.propTypes = {
+  dispatch: React.PropTypes.func,
+};
+
+const ConnectedAppTempalte = connect(() => ({}))(AppTemplate);
 
 /* global document */
 ReactDOM.render(
   <MuiThemeProvider muiTheme={getMuiTheme()}>
-    <AppTemplate />
+    <Provider store={store}>
+      <ConnectedAppTempalte />
+    </Provider>
   </MuiThemeProvider>,
   document.getElementById('app')
 );

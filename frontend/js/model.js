@@ -3,6 +3,8 @@ import moment from 'moment';
 import * as Immutable from 'immutable';
 /* eslint new-cap: 0*/
 
+const MPH_TO_KMPH = 3.6;
+
 export class JogEntry extends Immutable.Record({
   id: '',
   date: moment(),
@@ -10,13 +12,23 @@ export class JogEntry extends Immutable.Record({
   distanceMeters: 1,
   visible: true,
 }) {
-  constructor(props = {}) {
-    super(Object.assign({}, props,
-      {
-        id: uuid.v4(),
-        date: moment(props.date),
-      }
-    ));
+  constructor(props) {
+    if (props) {
+      super(Object.assign({}, props,
+        {
+          id: props.id ? props.id : uuid.v4(),
+          date: moment(props.date),
+          distanceMeters: parseInt(props.distanceMeters, 10),
+          timeSeconds: parseInt(props.timeSeconds, 10),
+        }
+      ));
+    } else {
+      super({ id: uuid.v4() });
+    }
+  }
+
+  speedKMpH() {
+    return ((this.distanceMeters / this.timeSeconds) * MPH_TO_KMPH);
   }
 }
 
@@ -25,7 +37,7 @@ export class JogEntryList extends Immutable.Record({
 }) {
   static fromJS(js) {
     return new JogEntryList(
-      js.delegate.map(a => new JogEntry(a))
+      js.delegate.map(it => new JogEntry(it))
     );
   }
 
@@ -33,12 +45,24 @@ export class JogEntryList extends Immutable.Record({
     super({ delegate: seed instanceof Immutable.List ? seed : Immutable.List(seed) });
   }
 
-  add(entry) {
+  addOrReplace(entry) {
     return new JogEntryList(this.delegate.push(entry));
+  }
+
+  remove(entry) {
+    return new JogEntryList(this.delegate.filter(it => it.id !== entry.id));
   }
 
   all() {
     return this.delegate.filter(it => it.visible);
+  }
+
+  orderByDate() {
+    return new JogEntryList(
+        this.delegate.sort((vala, valb) =>
+          !vala.date.isBefore(valb.date)
+        )
+    );
   }
 
   reverse() {
@@ -56,16 +80,20 @@ export class JogEntryList extends Immutable.Record({
 
 export class JogEntryViewOptions extends Immutable.Record({
   showReport: false,
-  filterDateFrom: moment().add(-30, 'days'),
+  filterDateFrom: moment().add(-1, 'months'),
   filterDateTo: moment(),
 }) {
-  constructor(props = {}) {
-    super(Object.assign({}, props,
-      {
-        filterDateTo: moment(props.filterDateTo),
-        filterDateFrom: moment(props.filterDateFrom),
-      }
-    ));
+  constructor(props) {
+    if (props) {
+      super(Object.assign({}, props,
+        {
+          filterDateTo: moment(props.filterDateTo),
+          filterDateFrom: moment(props.filterDateFrom),
+        }
+      ));
+    } else {
+      super();
+    }
   }
 
   withToggledShow() {

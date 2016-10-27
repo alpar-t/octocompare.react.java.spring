@@ -16,9 +16,9 @@ describe('JogEntry', () => {
       .toThrowError('Cannot set on an immutable record.');
   });
 
-  it('No custom Ids (ignored)', () => {
+  it('Custom IDs preserverd', () => {
     const entry = new JogEntry({ id: 1 });
-    expect(entry.id.length).toEqual(36);
+    expect(entry.id).toEqual(1);
   });
 
   it('Default values', () => {
@@ -98,6 +98,6 @@ describe('AuctionList', () => {
 
   it('can add', () => {
     const someEntry = new JogEntry();
-    expect(al.add(someEntry).all().size).toEqual(3);
+    expect(al.addOrReplace(someEntry).all().size).toEqual(3);
   });
 });
