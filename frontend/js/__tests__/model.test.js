@@ -40,6 +40,29 @@ describe('JogEntry', () => {
     expect(entry.timeSeconds).toEqual(30);
     expect(entry.date).toEqual(someTime);
   });
+
+  it('adjust visibility', () => {
+    const now = moment();
+    const entry = new JogEntry({ date: now });
+    expect(entry.visible).toEqual(true);
+    expect(
+      entry
+        .withAdjustedVisibility(moment(now).add(-2, 'days'), moment(now).add(-1, 'days'))
+        .visible
+    ).toEqual(false);
+
+    expect(
+      entry
+        .withAdjustedVisibility(moment(now).add(1, 'days'), moment(now).add(2, 'days'))
+        .visible
+    ).toEqual(false);
+
+    expect(
+      entry
+        .withAdjustedVisibility(moment(now).add(-1, 'days'), moment(now).add(1, 'days'))
+        .visible
+    ).toEqual(true);
+  });
 });
 
 describe('JogEntryViewOptions', () => {

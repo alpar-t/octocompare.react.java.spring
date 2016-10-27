@@ -30,6 +30,12 @@ export class JogEntry extends Immutable.Record({
   speedKMpH() {
     return ((this.distanceMeters / this.timeSeconds) * MPH_TO_KMPH);
   }
+
+  withAdjustedVisibility(filterDateFrom, filterDateTo) {
+    return new JogEntry(Object.assign(this.toJS(), {
+      visible: this.date.isBefore(filterDateTo) && this.date.isAfter(filterDateFrom),
+    }));
+  }
 }
 
 export class JogEntryList extends Immutable.Record({
@@ -51,6 +57,14 @@ export class JogEntryList extends Immutable.Record({
 
   remove(entry) {
     return new JogEntryList(this.delegate.filter(it => it.id !== entry.id));
+  }
+
+  makrDateVisibility(options) {
+    return new JogEntryList(
+      this.delegate.map(it =>
+        it.withAdjustedVisibility(options.filterDateFrom, options.filterDateTo)
+      )
+    );
   }
 
   all() {
@@ -94,6 +108,19 @@ export class JogEntryViewOptions extends Immutable.Record({
     } else {
       super();
     }
+  }
+
+  withFilters(filterDateFrom, filterDateTo) {
+    const update = {};
+    if (filterDateFrom) {
+      Object.assign(update, { filterDateFrom });
+    }
+    if (filterDateTo) {
+      Object.assign(update, { filterDateTo });
+    }
+    return new JogEntryViewOptions(
+      Object.assign({}, this.toJS(), update)
+    );
   }
 
   withToggledShow() {

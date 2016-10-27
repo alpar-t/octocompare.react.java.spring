@@ -12,6 +12,8 @@ const Toolbar = ({
     filterDateTo,
     filterDateFrom,
     onAddOrEdit,
+    onTogleWeeklyReport,
+    onDateFiltersUpdate,
 }) => <div style={{ fontSize: '18pt' }}>
   <MaterialToolbar>
     <ToolbarGroup >
@@ -19,6 +21,7 @@ const Toolbar = ({
       <IconButton
         iconClassName="fa fa-bar-chart"
         iconStyle={{ color: showReport ? colors.orange700 : colors.orange200 }}
+        onTouchTap={onTogleWeeklyReport}
       />
       <ToolbarSeparator />
       <DatePicker
@@ -27,6 +30,7 @@ const Toolbar = ({
         container="inline"
         autoOk
         defaultDate={filterDateFrom.toDate()}
+        onChange={(event, value) => { onDateFiltersUpdate(value, null); }}
       />
       <DatePicker
         style={{ marginLeft: '1em' }}
@@ -34,6 +38,7 @@ const Toolbar = ({
         container="inline"
         autoOk
         defaultDate={filterDateTo.toDate()}
+        onChange={(event, value) => { onDateFiltersUpdate(null, value); }}
       />
     </ToolbarGroup>
   </MaterialToolbar>
@@ -44,6 +49,7 @@ Toolbar.propTypes = {
   filterDateTo: React.PropTypes.instanceOf(moment),
   filterDateFrom: React.PropTypes.instanceOf(moment),
   onAddOrEdit: React.PropTypes.func,
+  onTogleWeeklyReport: React.PropTypes.func,
 };
 
 export default Toolbar;

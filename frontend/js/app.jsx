@@ -11,7 +11,13 @@ import TopBar from 'joggr/components/TopBar';
 import Toolbar from 'joggr/components/Toolbar';
 import WeeklyReport from 'joggr/components/WeeklyReport';
 import JogEntryList from 'joggr/components/JogEntryList';
-import { store, pushJogEntry, removeJogEntry } from 'joggr/state';
+import {
+  store,
+  pushJogEntry,
+  removeJogEntry,
+  toggleWeeklyReport,
+  updateFilters,
+} from 'joggr/state';
 
 // Needed for onTouchTap
 // Check: https://github.com/zilverline/react-tap-event-plugin
@@ -49,6 +55,16 @@ const AppTemplate = ({ dispatch }) => <div style={{ maxWidth: '1200px' }}>
       onAddOrEdit={
         (entry) => {
           dispatch(pushJogEntry(entry));
+        }
+      }
+      onTogleWeeklyReport={
+        () => {
+          dispatch(toggleWeeklyReport());
+        }
+      }
+      onDateFiltersUpdate={
+        (filterDateFrom, filterDateTo) => {
+          dispatch(updateFilters(filterDateFrom, filterDateTo));
         }
       }
     />
