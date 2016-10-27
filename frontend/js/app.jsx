@@ -29,6 +29,7 @@ const ConnectedJogEntryList = connect(state => ({
 
 const ConnectedWeeklyReport = connect(state => ({
   expanded: state.options.showReport,
+  data: state.jogEntries.reportSpeedPerWeek(),
 }))(WeeklyReport);
 
 const ConnectedToolbar = connect(({
@@ -68,13 +69,7 @@ const AppTemplate = ({ dispatch }) => <div style={{ maxWidth: '1200px' }}>
         }
       }
     />
-    <ConnectedWeeklyReport
-      data={[
-          { week: 1, speed: 4.4 },
-          { week: 2, speed: 9.1 },
-          { week: 3, speed: 11.3 },
-      ]}
-    />
+    <ConnectedWeeklyReport />
     <ConnectedJogEntryList
       onRemove={(activity) => {
         dispatch(removeJogEntry(activity));

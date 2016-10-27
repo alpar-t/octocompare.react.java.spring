@@ -71,6 +71,28 @@ export class JogEntryList extends Immutable.Record({
     return this.delegate.filter(it => it.visible);
   }
 
+  reportSpeedPerWeek() {
+    const weekAndSpeed = this.all()
+    .map(entry =>
+        ({ week: entry.date.week(), speed: entry.speedKMpH() })
+    )
+    .reduce((collect, value) => {
+      const ret = Object.assign({}, collect);
+      if (ret[value.week]) {
+        ret[value.week].speed += value.speed;
+        ret[value.week].count += 1.0;
+      } else {
+        ret[value.week] = { speed: value.speed, count: 1.0 };
+      }
+      return ret;
+    }, {});
+
+    return Object.keys(weekAndSpeed).map(week => ({
+      week: parseInt(week, 10),
+      speed: weekAndSpeed[week].speed / weekAndSpeed[week].count,
+    }));
+  }
+
   orderByDate() {
     return new JogEntryList(
         this.delegate.sort((vala, valb) =>

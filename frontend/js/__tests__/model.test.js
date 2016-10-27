@@ -63,6 +63,11 @@ describe('JogEntry', () => {
         .visible
     ).toEqual(true);
   });
+
+  it('speedKMpH', () => {
+    const entry = new JogEntry({ distanceMeters: 6000, timeSeconds: 331 });
+    expect(entry.speedKMpH()).toEqual(65.25679758308158);
+  });
 });
 
 describe('JogEntryViewOptions', () => {
@@ -97,7 +102,7 @@ describe('JogEntryViewOptions', () => {
   });
 });
 
-describe('AuctionList', () => {
+describe('JogEntryList', () => {
   const empty = new JogEntryList();
   const al = new JogEntryList([
     validEntry,
@@ -122,5 +127,20 @@ describe('AuctionList', () => {
   it('can add', () => {
     const someEntry = new JogEntry();
     expect(al.addOrReplace(someEntry).all().size).toEqual(3);
+  });
+
+  it('report speed per week', () => {
+    const list = new JogEntryList([
+      new JogEntry({ distanceMeters: 1000, timeSeconds: 180, date: someTime }),
+      new JogEntry({ distanceMeters: 3000, timeSeconds: 600, date: someTime }),
+      new JogEntry({ distanceMeters: 2000, timeSeconds: 180, date: moment(someTime).add(8, 'days') }),
+      new JogEntry({ distanceMeters: 6000, timeSeconds: 600, date: moment(someTime).add(8, 'days') }),
+      new JogEntry({ distanceMeters: 6000, timeSeconds: 600, date: moment(someTime).add(15, 'days') }),
+    ]);
+    expect(list.reportSpeedPerWeek()).toEqual([
+        { week: 35, speed: 19 },
+        { week: 36, speed: 38 },
+        { week: 37, speed: 36 },
+    ]);
   });
 });
