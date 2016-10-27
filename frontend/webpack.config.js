@@ -26,13 +26,15 @@ module.exports = {
       loaders: [
         {
           test: /\.jsx?$/,
+          exclude: /node_modules/,
           loader: 'babel',
           query: {
             presets: [ 'react', 'es2015' ],
             compact: true,
             minified: true,
             comments: false,
-            babelrc: false
+            babelrc: false,
+            cacheDirectory: '.webpack.cache',  
           }
         },
         {
