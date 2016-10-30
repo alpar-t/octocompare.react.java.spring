@@ -26,7 +26,7 @@ public class JogEntry {
             @JsonProperty("timeSeconds") int timeSeconds,
             @JsonProperty("date") Date date
     ) {
-        this.id = id == null ? UUID.randomUUID().toString() : id;
+        this.id = id == null ? UUID.randomUUID().toString() : UUID.fromString(id).toString();
         this.distanceMeters = distanceMeters;
         this.timeSeconds = timeSeconds;
         this.date = date == null ? new Date() : date;

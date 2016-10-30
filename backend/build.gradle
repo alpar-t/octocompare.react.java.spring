@@ -13,17 +13,28 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
-jar {
-    baseName = 'gs-spring-boot'
-    version =  '0.1.0'
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    options.compilerArgs  << '-parameters'
 }
+
+version =  '0.1.0'
 
 repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web") {
@@ -41,8 +52,22 @@ dependencies {
     compile 'org.springframework.data:spring-data-rest-webmvc'
     
     runtime("org.hsqldb:hsqldb")
-    runtime 'org.webjars:hal-browser'
+    compile 'org.springframework.data:spring-data-rest-hal-browser'
 
     testCompile("junit:junit")
+
+    integrationTestCompile configurations.testCompile
+    integrationTestRuntime configurations.testRuntime
+    integrationTestCompile 'org.springframework.boot:spring-boot-starter-test'
+
+
 }
+
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+check.dependsOn integrationTest
+
 
