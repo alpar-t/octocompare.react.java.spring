@@ -3,10 +3,9 @@ package io.joggr.test.integration;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
-import io.joggr.Roles;
-import io.joggr.aaa.User;
+import io.joggr.aaa.Roles;
+import io.joggr.aaa.BootstrapCredentialsSetup;
 import io.joggr.aaa.UserRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +33,8 @@ public class ApiSecurityIT {
 
     private final Logger logger = LoggerFactory.getLogger(ApiSecurityIT.class);
 
-    public static final String ADMIN_USER = "integration-test-user-admin";
-    public static final String ADMIN_PASSWORD = "integration-test-password";
+    public static final String ADMIN_USER = BootstrapCredentialsSetup.DEFAULT_ADMIN_NAME;
+    public static final String ADMIN_PASSWORD = BootstrapCredentialsSetup.DEFAULT_ADMIN_PASSWORD;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -44,13 +42,6 @@ public class ApiSecurityIT {
     private UserRepository users;
     @Autowired
     private PasswordEncoder passwordencoder;
-
-
-    @Before
-    public void setUp() {
-        logger.info("Creating admin user: {}:{}", ADMIN_USER, ADMIN_PASSWORD);
-        users.save(new User(ADMIN_USER, passwordencoder.encode(ADMIN_PASSWORD), Arrays.asList(Roles.values())));
-    }
 
     @Test
     public void halLinksPresent() {
