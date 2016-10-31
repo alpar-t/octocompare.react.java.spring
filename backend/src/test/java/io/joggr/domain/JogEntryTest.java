@@ -1,4 +1,4 @@
-package io.joggr;
+package io.joggr.domain;
 
 import org.junit.Test;
 

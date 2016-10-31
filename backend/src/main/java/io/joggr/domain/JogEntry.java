@@ -1,7 +1,8 @@
-package io.joggr;
+package io.joggr.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
@@ -11,10 +12,12 @@ import java.util.UUID;
 public class JogEntry {
 
     @Id
+    @Column(unique = true)
     final private String id;
     final private int distanceMeters;
     final private int timeSeconds;
     final private Date date;
+    // TODO: final private User user;
 
     protected JogEntry() {
         this(0, 0);
