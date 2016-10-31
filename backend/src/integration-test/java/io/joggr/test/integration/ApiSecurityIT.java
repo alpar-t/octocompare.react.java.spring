@@ -3,9 +3,8 @@ package io.joggr.test.integration;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
-import io.joggr.aaa.Roles;
-import io.joggr.aaa.BootstrapCredentialsSetup;
-import io.joggr.aaa.UserRepository;
+import io.joggr.aaa.*;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -20,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +31,10 @@ import static org.assertj.core.api.Assertions.fail;
 @DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_CLASS)
 public class ApiSecurityIT {
 
+    public static final String CONTENT_MANAGER_USER = "test-user-content-manager";
+    public static final String CONTENT_MANAGER_PASSWORD = "content-manager-password";
+    public static final String TEST_USERNAME = "integration-test-user";
+    public static final String TEST_PASSWORD = "integration-test-password";
     private final Logger logger = LoggerFactory.getLogger(ApiSecurityIT.class);
 
     public static final String ADMIN_USER = BootstrapCredentialsSetup.DEFAULT_ADMIN_NAME;
@@ -39,9 +43,25 @@ public class ApiSecurityIT {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
-    private UserRepository users;
+    private UnsecuredUserRepository users;
     @Autowired
     private PasswordEncoder passwordencoder;
+
+    @Before
+    public void setUp() throws Exception {
+        logger.info("Created content manager: {}",
+        users.save(new User(
+                CONTENT_MANAGER_USER,
+                passwordencoder.encode(CONTENT_MANAGER_PASSWORD),
+                Collections.singleton(Roles.ROLE_CONTENT_MANAGER))
+        ));
+        logger.info("Created user: {}",
+                users.save(new User(
+                        TEST_USERNAME,
+                        passwordencoder.encode(TEST_PASSWORD),
+                        Collections.singleton(Roles.ROLE_USER))
+                ));
+    }
 
     @Test
     public void halLinksPresent() {
@@ -76,7 +96,7 @@ public class ApiSecurityIT {
         String createdUser = doGETasAdmin("/users/testu");
         List red = JsonPath.<List>read(createdUser, "$.authorities");
         assertThat(red.size()).isEqualTo(1);
-        assertThat(red).contains(Roles.USER_ROLE.name());
+        assertThat(red).contains(Roles.ROLE_USER.name());
 
         restTemplate
                 .withBasicAuth(ADMIN_USER, ADMIN_PASSWORD)
@@ -95,6 +115,32 @@ public class ApiSecurityIT {
 
     private <T> String doPOSTasNobody(String url, T body) {
         return doPOST(url, body, this.restTemplate);
+    }
+
+    @Test
+    public void contentManagersCantAccessUsers() {
+        String response = restTemplate
+                .withBasicAuth(CONTENT_MANAGER_USER, CONTENT_MANAGER_PASSWORD)
+                .getForObject("/users/" + ADMIN_USER, String.class);
+        logger.info("Response for listing users with content manager role: {}", response);
+        assertThat(JsonPath.<String>read(response, "$.error")).isEqualTo("Forbidden");
+    }
+
+    @Test
+    public void regularUserCantAccessUsers() {
+        String response = restTemplate
+                .withBasicAuth(TEST_USERNAME, TEST_PASSWORD)
+                .getForObject("/users/" + ADMIN_USER, String.class);
+        logger.info("Response for listing users with content manager role: {}", response);
+        assertThat(JsonPath.<String>read(response, "$.error")).isEqualTo("Forbidden");
+    }
+
+    @Test
+    public void contentManagersCanAccessContent() {
+        doGET(
+                "/jogEntries",
+                restTemplate.withBasicAuth(CONTENT_MANAGER_USER, CONTENT_MANAGER_PASSWORD)
+        );
     }
 
     private <T> String doPOST(String url, T body, TestRestTemplate restTemplate) {
@@ -133,12 +179,6 @@ public class ApiSecurityIT {
         }
         assertThat(JsonPath.<Map>read(response, "$._links")).isNotEmpty();
         return response;
-    }
-
-
-    @Test
-    public void createAndDelete() {
-
     }
 
 }

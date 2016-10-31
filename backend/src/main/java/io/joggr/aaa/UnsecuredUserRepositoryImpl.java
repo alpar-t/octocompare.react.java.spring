@@ -10,15 +10,15 @@ import java.util.Collections;
 
 @Service
 @RestController
-public class UserRepositoryImpl implements UserSignUpExtension {
+public class UnsecuredUserRepositoryImpl implements UserSignUpExtension {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final UserRepository users;
+    private final UnsecuredUserRepository users;
 
     @Autowired
     @Lazy
-    public UserRepositoryImpl(PasswordEncoder passwordEncoder, UserRepository users) {
+    public UnsecuredUserRepositoryImpl(PasswordEncoder passwordEncoder, UnsecuredUserRepository users) {
         this.passwordEncoder = passwordEncoder;
         this.users = users;
     }
@@ -32,9 +32,8 @@ public class UserRepositoryImpl implements UserSignUpExtension {
         return users.save(new User(
                 username,
                 passwordEncoder.encode(password),
-                Collections.singleton(Roles.USER_ROLE)
+                Collections.singleton(Roles.ROLE_USER)
         )).withObscuredPassword();
-
     }
 
 

@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.Date;
 import java.util.List;
 
-@PreAuthorize("hasRole('ROLE_USER')")
+@PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
 public interface JogEntryRepository extends CrudRepository<JogEntry, String> {
 
     List<JogEntry> findByDateBetween(

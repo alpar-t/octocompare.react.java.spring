@@ -13,11 +13,11 @@ public class BootstrapCredentialsSetup {
     public static final String DEFAULT_ADMIN_NAME = "admin";
     public static final String DEFAULT_ADMIN_PASSWORD = "password";
 
-    private final UserRepository users;
+    private final UnsecuredUserRepository users;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public BootstrapCredentialsSetup(UserRepository users, PasswordEncoder passwordEncoder) {
+    public BootstrapCredentialsSetup(UnsecuredUserRepository users, PasswordEncoder passwordEncoder) {
         this.users = users;
         this.passwordEncoder = passwordEncoder;
     }

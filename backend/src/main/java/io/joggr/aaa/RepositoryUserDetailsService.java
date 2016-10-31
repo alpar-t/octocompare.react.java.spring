@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 public class RepositoryUserDetailsService implements UserDetailsService{
 
     private final Logger logger = LoggerFactory.getLogger(RepositoryUserDetailsService.class);
-    private final UserRepository users;
+    private final UnsecuredUserRepository users;
 
     @Autowired
-    public RepositoryUserDetailsService(UserRepository users) {
+    public RepositoryUserDetailsService(UnsecuredUserRepository users) {
         this.users = users;
     }
 
