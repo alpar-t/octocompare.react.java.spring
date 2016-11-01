@@ -8,8 +8,50 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.Date;
 import java.util.List;
 
-@PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+@PreAuthorize("hasRole('ROLE_CONTENT_MANAGER') or hasRole('ROLE_USER')")
 public interface JogEntryRepository extends CrudRepository<JogEntry, String> {
+
+    // TODO : allow users to findOne their own
+    @Override
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    JogEntry findOne(@Param("jogID")String id);
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    boolean exists(@Param("jogID") String id);
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    Iterable<JogEntry> findAll();
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    Iterable<JogEntry> findAll(@Param("jogIDs") Iterable<String> ids);
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    long count();
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    // TODO: allow users to delete their own
+    void delete(@Param("jogID") String id);
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    // TODO: allow users to delete their own
+    void delete(@Param("jogEntry") JogEntry entity);
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    void delete(@Param("jogEntries") Iterable<? extends JogEntry> entities);
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    void deleteAll();
+
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER') or userName == authentication?.name")
+    List<JogEntry> findByUserName(@Param("userName") String userName);
 
     List<JogEntry> findByDateBetween(
             @DateTimeFormat(pattern = "yyyy-MM-dd")
