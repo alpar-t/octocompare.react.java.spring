@@ -2,6 +2,7 @@ package io.joggr.domain;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -11,13 +12,12 @@ import java.util.List;
 @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER') or hasRole('ROLE_USER')")
 public interface JogEntryRepository extends CrudRepository<JogEntry, String> {
 
-    // TODO : allow users to findOne their own
     @Override
-    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER') or jogEntriesRepository.findOne(#jogId).userName = authentication?.name")
     JogEntry findOne(@Param("jogID")String id);
 
     @Override
-    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER') or jogEntriesRepository.findOne(#jogId).userName = authentication?.name")
     boolean exists(@Param("jogID") String id);
 
     @Override
@@ -33,13 +33,12 @@ public interface JogEntryRepository extends CrudRepository<JogEntry, String> {
     long count();
 
     @Override
-    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
-    // TODO: allow users to delete their own
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER') or jogEntriesRepository.findOne(#jogId).userName = authentication?.name")
     void delete(@Param("jogID") String id);
 
     @Override
-    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER')")
-    // TODO: allow users to delete their own
+    @RestResource( exported = false)
+    @PreAuthorize("denyAll")
     void delete(@Param("jogEntry") JogEntry entity);
 
     @Override
