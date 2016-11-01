@@ -30,6 +30,7 @@ public class RepositoryAugmentCurrentUser {
     @HandleBeforeCreate
     @HandleBeforeSave
     public void applyUserInformationUsingSecurityContext(JogEntry entry) {
+        logger.debug("May augment jogEntry '{}' with current user", entry.getId());
         Authentication authentication = securityContextProvider.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> currentAuthorities = authentication.getAuthorities();
         String currentUser = authentication.getName();
@@ -46,6 +47,5 @@ public class RepositoryAugmentCurrentUser {
             logger.info("Enforcing username {} instead of {}", currentUser, entry.getUserName());
             entry.setUserName(currentUser);
         }
-
     }
 }

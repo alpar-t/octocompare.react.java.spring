@@ -56,6 +56,7 @@ dependencies {
 
     integrationTestCompile configurations.compile
     integrationTestRuntime configurations.runtime
+    integrationTestCompile 'io.rest-assured:rest-assured:3.0.1'
     integrationTestCompile 'junit:junit'
     integrationTestCompile 'org.springframework.boot:spring-boot-starter-test'
 }
