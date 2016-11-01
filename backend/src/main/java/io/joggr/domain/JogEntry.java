@@ -17,7 +17,7 @@ public class JogEntry {
     final private int distanceMeters;
     final private int timeSeconds;
     final private Date date;
-    // TODO: final private User user;
+    private String userName;
 
     protected JogEntry() {
         this(0, 0);
@@ -27,20 +27,22 @@ public class JogEntry {
             @JsonProperty("id") String id,
             @JsonProperty("distanceMeters") int distanceMeters,
             @JsonProperty("timeSeconds") int timeSeconds,
-            @JsonProperty("date") Date date
+            @JsonProperty("date") Date date,
+            @JsonProperty("username") String userName
     ) {
         this.id = id == null ? UUID.randomUUID().toString() : UUID.fromString(id).toString();
         this.distanceMeters = distanceMeters;
         this.timeSeconds = timeSeconds;
         this.date = date == null ? new Date() : date;
+        this.userName = userName;
     }
 
     public JogEntry(int distanceMeters, int timeSeconds, Date date) {
-        this(null, distanceMeters, timeSeconds, date);
+        this(null, distanceMeters, timeSeconds, date, null);
     }
 
     public JogEntry(int distanceMeters, int timeSeconds) {
-        this(null, distanceMeters, timeSeconds, null);
+        this(null, distanceMeters, timeSeconds, null, null);
     }
 
     public String getId() {
@@ -57,5 +59,13 @@ public class JogEntry {
 
     public Date getDate() {
         return date;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

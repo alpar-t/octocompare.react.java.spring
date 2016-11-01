@@ -29,13 +29,13 @@ import static org.assertj.core.api.Assertions.fail;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_CLASS)
-public class ApiSecurityIT {
+public class MajorRolesIT {
 
     public static final String CONTENT_MANAGER_USER = "test-user-content-manager";
     public static final String CONTENT_MANAGER_PASSWORD = "content-manager-password";
     public static final String TEST_USERNAME = "integration-test-user";
     public static final String TEST_PASSWORD = "integration-test-password";
-    private final Logger logger = LoggerFactory.getLogger(ApiSecurityIT.class);
+    private final Logger logger = LoggerFactory.getLogger(MajorRolesIT.class);
 
     public static final String ADMIN_USER = BootstrapCredentialsSetup.DEFAULT_ADMIN_NAME;
     public static final String ADMIN_PASSWORD = BootstrapCredentialsSetup.DEFAULT_ADMIN_PASSWORD;
