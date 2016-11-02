@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --json --jsonOutputFile build/test_results.json" ,
+    "build": "webpack"
   },
   "repository": {
     "type": "git",

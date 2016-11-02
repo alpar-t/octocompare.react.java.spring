@@ -5,7 +5,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin')
 module.exports = {
     entry: ['babel-polyfill', 'normalize.css/normalize.css', './js/app.jsx'],
     output: {
-        path: path.resolve(__dirname, 'build'),
+        path: path.resolve(__dirname, 'build', 'dist'),
         filename: 'bundle.js'
     },
     plugins: [

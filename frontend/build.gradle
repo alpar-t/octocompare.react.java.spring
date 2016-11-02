@@ -1,0 +1,55 @@
+plugins {
+      id "com.moowork.node" version "0.13"
+}
+apply plugin: "base"
+
+node {
+    version = "6.7.0"
+    download = true
+}
+
+clean {
+    delete "node_modules"
+}
+
+npm_install {
+    // TODO: contribute this to the node plugin
+    inputs.file file('package.json')
+    outputs.dir file('node_modules')
+}
+
+task test(type: NpmTask) {
+    dependsOn npm_install
+    args = [ 'test' ]
+    inputs.file file('package.json')
+    inputs.dir file('js')
+    inputs.file file('.babelrc')
+    outputs.file file("$buildDir/test_results.json")
+}
+
+task compile(type: NpmTask) {    
+    dependsOn npm_install
+    args = [ 'run', 'build' ]
+    inputs.file file('package.json')
+    inputs.file file('webpack.config.js')
+    inputs.dir file('js')
+    outputs.dir file("$buildDir/dist")
+}
+
+task dist(type: Zip) {
+    dependsOn compile
+    from "$buildDir/dist"
+}
+
+assemble {
+    dependsOn dist
+}
+
+build {
+    dependsOn compile
+}
+
+check {
+    dependsOn test
+}
+
