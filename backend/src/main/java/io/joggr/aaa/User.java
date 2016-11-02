@@ -1,5 +1,6 @@
 package io.joggr.aaa;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,10 +29,11 @@ public class User implements UserDetails {
         roles= null;
     }
 
+    @JsonCreator
     public User(
-            @JsonProperty("email") String username,
+            @JsonProperty("userName") String username,
             @JsonProperty("password") String password,
-            @JsonProperty("roles") Collection<Roles> roles
+            @JsonProperty("authorities") Collection<Roles> roles
     ) {
         this.username = username;
         this.password = password;

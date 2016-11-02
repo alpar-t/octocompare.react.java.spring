@@ -12,10 +12,12 @@ import java.util.Arrays;
 import static io.joggr.aaa.Roles.ROLE_USER;
 import static io.joggr.aaa.Roles.ROLE_USER_MANAGER;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 
-public class UserSecurityPermissionsIT extends BaseIntegrationTest{
+/**
+ * @see UserRegistrationIT
+ */
+public class UserSecurityPermissionsIT extends BaseIntegrationTest {
 
     private final Logger logger = LoggerFactory.getLogger(UserSecurityPermissionsIT.class);
 
@@ -96,6 +98,35 @@ public class UserSecurityPermissionsIT extends BaseIntegrationTest{
                 .get("/")
         .then()
                 .spec(unauthorised)
+        ;
+    }
+
+    @Test
+    public void userManagersCanCreateNewUsers() {
+        given()
+                .spec(userWithRole.get(ROLE_USER_MANAGER))
+                .body(ImmutableMap.of(
+                        "userName", "testu",
+                        "password", "testp",
+                        "authorities",  Roles.values()
+                ))
+                .contentType(ContentType.JSON)
+        .when()
+                .post("users")
+        .then()
+                .log().all()
+                .statusCode(201)
+        ;
+
+        given()
+                .spec(userWithRole.get(ROLE_USER_MANAGER))
+                .pathParam("userName", "testu")
+        .when()
+                .get("/users/{userName}")
+        .then()
+                .log().all()
+                .statusCode(200)
+                .body("authorities", hasSize(Roles.values().length))
         ;
     }
 

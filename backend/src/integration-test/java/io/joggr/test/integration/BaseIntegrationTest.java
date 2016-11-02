@@ -24,6 +24,7 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 
 @RunWith(SpringRunner.class)
@@ -71,7 +72,7 @@ public class BaseIntegrationTest {
                 .log().all()
                 .statusCode(200)
                 .body("_embedded.users",
-                        hasSize(Roles.values().length + 1 /*the admin account*/)
+                        hasSize(greaterThan(Roles.values().length))
                 );
         ;
     }
