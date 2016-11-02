@@ -21,6 +21,13 @@ compileJava {
 
 version =  '0.1.0'
 
+processResources {
+    dependsOn ':frontend:dist'
+    from ("${project(':frontend').buildDir}/dist") {
+        into "public"
+    }
+}
+
 repositories {
     mavenCentral()
 }

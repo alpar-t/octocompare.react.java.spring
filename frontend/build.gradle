@@ -3,6 +3,10 @@ plugins {
 }
 apply plugin: "base"
 
+ext {
+    distDir = file("$buildDir/dist")
+}
+
 node {
     version = "6.7.0"
     download = true
@@ -33,7 +37,7 @@ task compile(type: NpmTask) {
     inputs.file file('package.json')
     inputs.file file('webpack.config.js')
     inputs.dir file('js')
-    outputs.dir file("$buildDir/dist")
+    outputs.dir project.distDir
 }
 
 task dist(type: Zip) {
