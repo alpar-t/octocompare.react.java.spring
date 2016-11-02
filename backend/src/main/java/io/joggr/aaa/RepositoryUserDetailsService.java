@@ -12,22 +12,24 @@ import org.springframework.stereotype.Service;
 public class RepositoryUserDetailsService implements UserDetailsService{
 
     private final Logger logger = LoggerFactory.getLogger(RepositoryUserDetailsService.class);
-    private final UnsecuredUserRepository users;
+    private final UserRepository users;
 
     @Autowired
-    public RepositoryUserDetailsService(UnsecuredUserRepository users) {
+    public RepositoryUserDetailsService(UserRepository users) {
         this.users = users;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.info("Looking up {}", username);
-        User one = users.findOne(username);
-        logger.info("Found: {}", one);
-        if (one == null) {
-            throw new UsernameNotFoundException("No such user");
+        try (AsInternalUser __ = new AsInternalUser()) {
+            logger.info("Looking up {}", username);
+            User one = users.findOne(username);
+            logger.info("Found: {}", one);
+            if (one == null) {
+                throw new UsernameNotFoundException("No such user");
+            }
+            return one;
         }
-        return one;
     }
 
 }

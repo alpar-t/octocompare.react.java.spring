@@ -16,7 +16,7 @@ public class User implements UserDetails {
     @Id
     private final String username;
 
-    private final String password;
+    private String password;
 
     @ElementCollection(fetch=FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -47,6 +47,10 @@ public class User implements UserDetails {
     @JsonIgnore
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

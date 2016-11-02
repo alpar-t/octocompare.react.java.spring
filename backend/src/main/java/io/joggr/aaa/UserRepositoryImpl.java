@@ -10,15 +10,15 @@ import java.util.Collections;
 
 @Service
 @RestController
-public class UnsecuredUserRepositoryImpl implements UserSignUpExtension {
+public class UserRepositoryImpl implements UserSignUpExtension {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final UnsecuredUserRepository users;
+    private final UserRepository users;
 
     @Autowired
     @Lazy
-    public UnsecuredUserRepositoryImpl(PasswordEncoder passwordEncoder, UnsecuredUserRepository users) {
+    public UserRepositoryImpl(PasswordEncoder passwordEncoder, UserRepository users) {
         this.passwordEncoder = passwordEncoder;
         this.users = users;
     }
@@ -26,14 +26,16 @@ public class UnsecuredUserRepositoryImpl implements UserSignUpExtension {
     @Override
     @RequestMapping(path = "/users/signUp/{username}", method= RequestMethod.POST)
     public User signUp(@PathVariable("username") String username, @RequestBody String password) throws UserAlreadyExistsException {
-        if ( users.exists(username) ) {
-            throw new UserAlreadyExistsException();
+        try (AsInternalUser __ = new AsInternalUser()) {
+            if (users.exists(username)) {
+                throw new UserAlreadyExistsException();
+            }
+            return users.save(new User(
+                    username,
+                    passwordEncoder.encode(password),
+                    Collections.singleton(Roles.ROLE_USER)
+            )).withObscuredPassword();
         }
-        return users.save(new User(
-                username,
-                passwordEncoder.encode(password),
-                Collections.singleton(Roles.ROLE_USER)
-        )).withObscuredPassword();
     }
 
 

@@ -2,29 +2,15 @@ package io.joggr.test.integration;
 
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 
 
 public class UserRegistrationIT extends BaseIntegrationTest {
 
-    @Test
-    public void checkBasicAccess() {
-        when()
-                .get("/")
-        .then()
-                .log().all()
-                .spec(unauthorised);
-
-        given()
-                .spec(withAdminUser)
-        .when()
-                .get("/")
-        .then()
-                .log().all()
-                .statusCode(200);
-    }
+    private final Logger logger = LoggerFactory.getLogger(UserRegistrationIT.class);
 
     @Test
     public void checkUserRegistration() {
@@ -51,11 +37,12 @@ public class UserRegistrationIT extends BaseIntegrationTest {
                 .log().all()
                 .statusCode(409);
 
-        logger.info("Show that the new user works");
+        logger.info("Show that the new user can authenticate and access itself");
         given()
                 .auth().basic(testUser, testPass)
+                .pathParam("userName", testUser)
         .when()
-                .get("/")
+                .get("/users/{userName}")
         .then()
                 .log().all()
                 .statusCode(200);

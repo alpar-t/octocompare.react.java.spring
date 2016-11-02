@@ -1,15 +1,13 @@
 package io.joggr.test.integration;
 
-import io.joggr.aaa.BootstrapCredentialsSetup;
-import io.joggr.aaa.Roles;
-import io.joggr.aaa.UnsecuredUserRepository;
-import io.joggr.aaa.User;
+import io.joggr.aaa.*;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,19 +22,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.restassured.RestAssured.basic;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_CLASS)
 public class BaseIntegrationTest {
-    protected final Logger logger = LoggerFactory.getLogger(UserRegistrationIT.class);
+    private final Logger logger = LoggerFactory.getLogger(BaseIntegrationTest.class);
 
     @Autowired
-    private UnsecuredUserRepository users;
+    private UserRepository users;
     @Autowired
-    private PasswordEncoder passwordencoder;
+    protected PasswordEncoder passwordencoder;
     @Value("${local.server.port}")
     private int port;
 
@@ -45,6 +44,38 @@ public class BaseIntegrationTest {
     protected ResponseSpecification forbidden;
     protected Map<Roles, RequestSpecification> userWithRole;
 
+    @Test
+    public void checkBasicAccess() {
+        when()
+                .get("/")
+                .then()
+                .log().all()
+                .spec(unauthorised);
+
+        given()
+                .spec(withAdminUser)
+                .when()
+                .get("/")
+                .then()
+                .log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    public void checkTestUsersCreated() {
+        given()
+                .spec(withAdminUser)
+        .when()
+                .get("/users")
+        .then()
+                .log().all()
+                .statusCode(200)
+                .body("_embedded.users",
+                        hasSize(Roles.values().length + 1 /*the admin account*/)
+                );
+        ;
+    }
+
     @Before
     public void setUp() throws Exception {
         logger.debug("Test API running on port: {}", port);
@@ -52,13 +83,15 @@ public class BaseIntegrationTest {
 
         userWithRole = new HashMap<>();
         for (Roles role : Roles.values()) {
-            logger.info("Created user with role {} : userName is '{}', passowrd '{}'",
-                    users.save(new User(
-                            role.name(),
-                            passwordencoder.encode(role.name()),
-                            Collections.singleton(role))
-                    )
-            );
+            try (AsInternalUser __ = new AsInternalUser()) {
+                logger.info("Created user with role {} : userName is '{}', passowrd '{}'",
+                        users.save(new User(
+                                role.name(),
+                                passwordencoder.encode(role.name()),
+                                Collections.singleton(role))
+                        ), role, role
+                );
+            }
             userWithRole.put(
                     role,
                     (new RequestSpecBuilder()).setAuth(basic(role.name(), role.name())).build()

@@ -58,6 +58,7 @@ dependencies {
     integrationTestRuntime configurations.runtime
     integrationTestCompile 'io.rest-assured:rest-assured:3.0.1'
     integrationTestCompile 'junit:junit'
+    integrationTestCompile 'com.google.guava:guava:20.0'    
     integrationTestCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 
