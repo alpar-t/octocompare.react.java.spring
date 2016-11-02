@@ -1,10 +1,12 @@
 package io.joggr.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,6 +20,9 @@ public class JogEntry {
     final private int timeSeconds;
     final private Date date;
     private String userName;
+
+    public @Version Long version;
+    public @LastModifiedDate Date updated;
 
     protected JogEntry() {
         this(0, 0);
@@ -35,6 +40,8 @@ public class JogEntry {
         this.timeSeconds = timeSeconds;
         this.date = date == null ? new Date() : date;
         this.userName = userName;
+        this.updated = new Date();
+        this.version = 0l;
     }
 
     public JogEntry(int distanceMeters, int timeSeconds, Date date) {
