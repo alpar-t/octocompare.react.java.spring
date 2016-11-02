@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -56,13 +57,13 @@ public class RepositoryAugmentCurrentUserTest {
     }
 
     @Test
-    public void testUsernameEnforcedForManagerIfNotProvided() throws Exception {
+    public void testUsernameNotEnforcedForManagerIfNotProvided() throws Exception {
         when(authentication.getAuthorities()).thenReturn(
                 (Collection) Collections.singleton(Roles.ROLE_CONTENT_MANAGER)
         );
 
         testee.applyUserInformationUsingSecurityContext(jogEntry);
-        assertEquals(MOCK_CURRENT_USER_NAME, jogEntry.getUserName());
+        assertNull(jogEntry.getUserName());
     }
 
     @Test

@@ -35,14 +35,9 @@ public class RepositoryAugmentCurrentUser {
         Collection<? extends GrantedAuthority> currentAuthorities = authentication.getAuthorities();
         String currentUser = authentication.getName();
         if (currentAuthorities.contains(Roles.ROLE_CONTENT_MANAGER)) {
-            if (entry.getUserName() == null || entry.getUserName().isEmpty()) {
-                logger.info("User is a content manager, but no username was provided, will use current.");
-                entry.setUserName(currentUser);
-            } else {
-                logger.info("Current user '{}' has authority '{}' ({}). Will not override user.",
-                        currentUser, Roles.ROLE_CONTENT_MANAGER, currentAuthorities
-                );
-            }
+            logger.info("Current user '{}' has authority '{}' ({}). Will not override user.",
+                    currentUser, Roles.ROLE_CONTENT_MANAGER, currentAuthorities
+            );
         } else {
             logger.info("Enforcing username {} instead of {}", currentUser, entry.getUserName());
             entry.setUserName(currentUser);

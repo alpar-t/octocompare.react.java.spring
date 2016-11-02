@@ -3,7 +3,6 @@ package io.joggr.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Version;
@@ -14,7 +13,6 @@ import java.util.UUID;
 public class JogEntry {
 
     @Id
-    @Column(unique = true)
     final private String id;
     final private int distanceMeters;
     final private int timeSeconds;
