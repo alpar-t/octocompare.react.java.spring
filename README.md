@@ -46,8 +46,11 @@ The persistence is dealt with using [spring-data](http://projects.spring.io/spri
 This assures that the underlying data store can be easily changed going forward. 
 The overall goal is to keep the application as independent as possible from the actual data store and access technology. 
 This will assure us flexibility to pick the best solutions going forward as the project grows.
-In addition [spring-data-rest](http://projects.spring.io/spring-data-rest/) provides implementations for CRUD APIs,
+In addition [spring-data-rest](http://docs.spring.io/spring-data/rest/docs/current/reference/html/) provides implementations for CRUD APIs,
 allowing us to show an initial demo sooner, and save on development cost without adding technical debt. 
+
+Authentication and roles are implemented using
+[spring-security](http://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle).
 
 Resources
 ---------
