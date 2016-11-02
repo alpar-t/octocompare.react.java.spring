@@ -4,7 +4,7 @@ About
 joggr.io is an application that tracks jogging times of users.
 
 Features:
- - Create an account or log in with existing Google account 
+ - Create an account and log in
  - When logged in, user can see, edit and delete his times he entered
  - Implement at least three roles with different permission levels: 
      - a regular user would only be able to CRUD on their owned records
@@ -16,8 +16,10 @@ Features:
 - Report on average speed & distance per week
 - REST API. 
   - possible to perform all user actions via the API, including authentication.
-  -  In any case you should be able to explain how a REST API works and demonstrate that by creating functional tests that use the REST Layer directly. Please be prepared to use REST clients like Postman, cURL, etc for this purpose.
-All actions need to be done client side using AJAX, refreshing the page is not acceptable. (If a mobile app, disregard this)
+  - In any case you should be able to explain how a REST API works and 
+    demonstrate that by creating functional tests that use the REST Layer directly. 
+    Please be prepared to use REST clients like Postman, cURL, etc for this purpose.
+All actions need to be done client side using AJAX, refreshing the page is not acceptable. 
 Bonus: unit and e2e tests!
 You will not be marked on graphic design, however, do try to keep it as tidy as possible.
 
@@ -28,6 +30,18 @@ Non features:
 
 Developer Notes
 ===============
+
+The only pre-requisite to build and run is JDK version 8 and an internet connection.
+
+To start the application:
+
+    ./gradlew bootRun
+
+Then navigate to: http://localhost:8080/
+
+To run all tests on both ends:
+
+    ./gradlew check
 
 Front End
 ---------
