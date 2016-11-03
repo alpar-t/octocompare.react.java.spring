@@ -10,7 +10,15 @@ casper.on('page.error', function(msg, trace) {
        var step = trace[i];
        this.echo('   ' + step.file + ' (line ' + step.line + ')', 'ERROR');
    }
+   casper.exit(1);
 });
+
+
+//Capture all fails
+casper.test.on("fail", function () {
+    casper.exit(1);
+});
+
 casper.test.begin('Resurrectio test', function(test) {
    casper.start('http://localhost:8080/');
    casper.waitForSelector("form input[name='username']",
@@ -93,4 +101,5 @@ casper.test.begin('Resurrectio test', function(test) {
    });
 
    casper.run(function() {test.done();});
+
 });
