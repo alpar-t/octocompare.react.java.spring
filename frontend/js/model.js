@@ -46,9 +46,12 @@ export class JogEntryList extends Immutable.Record({
   delegate: [],
 }) {
   static fromJS(js) {
-    return new JogEntryList(
-      js.delegate.map(it => new JogEntry(it))
-    );
+    if (js && js.delegate) {
+      return new JogEntryList(
+        js.delegate.map(it => new JogEntry(it))
+      );
+    }
+    return new JogEntryList();
   }
 
   constructor(seed) {

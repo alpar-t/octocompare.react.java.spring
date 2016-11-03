@@ -1,8 +1,10 @@
 import { createStore } from 'redux';
-import persistState from 'redux-localstorage';
+import { persistStore, autoRehydrate } from 'redux-persist';
+import { REHYDRATE } from 'redux-persist/constants';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { JogEntry, JogEntryList, JogEntryViewOptions, Credentials } from 'joggr/model';
+
 
 const PUSH_JOG_ENTRY = 'PUSH_JOG_ENTRY';
 const REMOVE_JOG_ENTRY = 'REMOVE_JOG_ENTRY';
@@ -99,28 +101,23 @@ function reducer(state, action) {
         credentials: new Credentials(action),
       });
     }
+    case REHYDRATE: {
+      const incoming = action.payload;
+      const options = new JogEntryViewOptions(incoming.options);
+      if (incoming) {
+        return {
+          jogEntries: JogEntryList.fromJS(incoming.jogEntries).makrDateVisibility(options),
+          options,
+          credentials: new Credentials(incoming.credentials),
+        };
+      }
+      return state;
+    }
     default: {
       if (!state) {
         return defaultState;
       }
-      if (
-        state.jogEntries instanceof JogEntryList &&
-        state.options instanceof JogEntryViewOptions
-      ) {
-        return state;
-      }
-      const resultingState = Object.assign({}, state);
-      if (state.options) {
-        Object.assign(resultingState, {
-          options: new JogEntryViewOptions(state.options),
-        });
-      }
-      if (state.jogEntries) {
-        Object.assign(resultingState, {
-          jogEntries: JogEntryList.fromJS(state.jogEntries).makrDateVisibility(state.options),
-        });
-      }
-      return resultingState;
+      return state;
     }
   }
 }
@@ -129,6 +126,7 @@ export const store = createStore(
   reducer,
   defaultState,
   composeWithDevTools(
-    persistState()
+    autoRehydrate()
   )
 );
+persistStore(store);
