@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "casperjs test index.js"
+    "test": "casperjs --log-level=debug --direct test index.js"
   },
   "author": "",
   "license": "ISC",
