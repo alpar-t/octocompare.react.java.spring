@@ -3,15 +3,25 @@ plugins {
 }
 apply plugin: "base"
 
+
 task run(type: NpmTask) {
+    dependsOn ':backend:build'
     dependsOn npm_install
+    dependsOn clean
     args = [ 'test' ]
-    inputs.file file('package.json')
-    inputs.file file('index.js')
-    outputs.file file("$buildDir/log.xml")
     execOverrides {
         it.environment("PATH", "${file("node_modules/.bin")}${File.pathSeparator}${System.env.PATH}")
+    }    
+    doLast {
+        spawn.end()
     }
+}
+run.spawn {
+    process {
+       def backend = project(":backend")
+       command = ['java', '-jar', "${backend.buildDir}/libs/${backend.name}-${backend.version}.jar"]
+       ready = 'Started Application in' 
+    }    
 }
 
 check {
