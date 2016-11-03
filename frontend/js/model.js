@@ -11,6 +11,7 @@ export class JogEntry extends Immutable.Record({
   timeSeconds: 1,
   distanceMeters: 1,
   visible: true,
+  markedForRemove: false,
 }) {
   constructor(props) {
     if (props) {
@@ -37,7 +38,15 @@ export class JogEntry extends Immutable.Record({
         moment(filterDateTo).add(1, 'days')
       ) && this.date.isAfter(
         filterDateFrom
-      ),
+      ) &&
+        !this.markedForRemove,
+    }));
+  }
+
+  withMarkForRemove() {
+    return new JogEntry(Object.assign(this.toJS(), {
+      visible: false,
+      markedForRemove: true,
     }));
   }
 }
@@ -64,12 +73,16 @@ export class JogEntryList extends Immutable.Record({
 
   addOrReplace(entry) {
     return new JogEntryList(
-      this.remove(entry).delegate.push(entry)
+      this.eject(entry).delegate.push(entry)
     );
   }
 
-  remove(entry) {
+  eject(entry) {
     return new JogEntryList(this.delegate.filter(it => it.id !== entry.id));
+  }
+
+  remove(entry) {
+    return this.addOrReplace(entry.withMarkForRemove());
   }
 
   makrDateVisibility(options) {
