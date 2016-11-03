@@ -44,6 +44,7 @@ export class JogEntry extends Immutable.Record({
 
 export class JogEntryList extends Immutable.Record({
   delegate: [],
+  username: '',
 }) {
   static fromJS(js) {
     if (js && js.delegate) {
@@ -54,8 +55,11 @@ export class JogEntryList extends Immutable.Record({
     return new JogEntryList();
   }
 
-  constructor(seed) {
-    super({ delegate: seed instanceof Immutable.List ? seed : Immutable.List(seed) });
+  constructor(seed, username = '') {
+    super({
+      delegate: seed instanceof Immutable.List ? seed : Immutable.List(seed),
+      username,
+    });
   }
 
   addOrReplace(entry) {

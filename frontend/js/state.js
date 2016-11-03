@@ -68,10 +68,21 @@ export function regsiter({ username, password }) {
 }
 
 const defaultState = {
+  allJogEntries: {},
   jogEntries: new JogEntryList(),
   options: new JogEntryViewOptions(),
   credentials: new Credentials(),
 };
+
+function syncedJogEntries(reducerFunc) {
+  return (state, action) => {
+    const reduced = Object.assign({}, reducerFunc(state, action));
+    reduced.allJogEntries = Object.assign(
+      {}, reduced.allJogEntries, { [reduced.credentials.username]: reduced.jogEntries }
+    );
+    return reduced;
+  };
+}
 
 function reducer(state, action) {
   switch (action.type) {
@@ -97,18 +108,27 @@ function reducer(state, action) {
       });
     }
     case LOGIN_OR_REGISTER: {
+      const credentials = new Credentials(action);
+      const jogEntries = JogEntryList.fromJS(
+        state.allJogEntries[credentials.username]
+      ).makrDateVisibility(state.options);
       return Object.assign({}, state, {
-        credentials: new Credentials(action),
+        credentials,
+        jogEntries,
       });
     }
     case REHYDRATE: {
       const incoming = action.payload;
       const options = new JogEntryViewOptions(incoming.options);
+      const credentials = new Credentials(incoming.credentials);
+      const jogEntries = JogEntryList.fromJS(
+        incoming.allJogEntries ? incoming.allJogEntries[credentials.username] : {}
+      ).makrDateVisibility(options);
       if (incoming) {
         return {
-          jogEntries: JogEntryList.fromJS(incoming.jogEntries).makrDateVisibility(options),
+          jogEntries,
           options,
-          credentials: new Credentials(incoming.credentials),
+          credentials,
         };
       }
       return state;
@@ -123,10 +143,15 @@ function reducer(state, action) {
 }
 
 export const store = createStore(
-  reducer,
+  syncedJogEntries(reducer),
   defaultState,
   composeWithDevTools(
     autoRehydrate()
   )
 );
-persistStore(store);
+persistStore(
+  store,
+  {
+    blacklist: ['jogEntries'],
+  }
+);
