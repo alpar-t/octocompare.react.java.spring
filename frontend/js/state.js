@@ -66,6 +66,7 @@ export function regsiter({ username, password }) {
 }
 
 const defaultState = {
+  jogEntries: new JogEntryList(),
   options: new JogEntryViewOptions(),
   credentials: new Credentials(),
 };
@@ -98,21 +99,29 @@ function reducer(state, action) {
         credentials: new Credentials(action),
       });
     }
-    default:
-      if (state.jogEntries instanceof JogEntryList) {
-        return state;
-      }
+    default: {
       if (!state) {
         return defaultState;
       }
-      if (state.jogEntries) {
-        const options = new JogEntryViewOptions(state.options);
-        return Object.assign({}, state, {
-          jogEntries: JogEntryList.fromJS(state.jogEntries).makrDateVisibility(options),
-          options,
+      if (
+        state.jogEntries instanceof JogEntryList &&
+        state.options instanceof JogEntryViewOptions
+      ) {
+        return state;
+      }
+      const resultingState = Object.assign({}, state);
+      if (state.options) {
+        Object.assign(resultingState, {
+          options: new JogEntryViewOptions(state.options),
         });
       }
-      return state;
+      if (state.jogEntries) {
+        Object.assign(resultingState, {
+          jogEntries: JogEntryList.fromJS(state.jogEntries).makrDateVisibility(state.options),
+        });
+      }
+      return resultingState;
+    }
   }
 }
 

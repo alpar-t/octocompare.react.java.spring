@@ -125,8 +125,8 @@ export class JogEntryViewOptions extends Immutable.Record({
     if (props) {
       super(Object.assign({}, props,
         {
-          filterDateTo: moment(props.filterDateTo),
-          filterDateFrom: moment(props.filterDateFrom),
+          filterDateFrom: props.filterDateFrom ? moment(props.filterDateFrom) : moment().add(-1, 'months'),
+          filterDateTo: props.filterDateTo ? moment(props.filterDateTo) : moment(),
         }
       ));
     } else {

@@ -8,7 +8,6 @@ import Formsy from 'formsy-react';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
 import FormsyDate from 'formsy-material-ui/lib/FormsyDate';
 
-
 import JogEntry from 'joggr/components/JogEntry';
 
 export default class AddEditDialog extends React.Component {
@@ -95,7 +94,14 @@ export default class AddEditDialog extends React.Component {
               }
               autoOk
             />
-          1
+            <FormsyText
+              hintText="how far did you go (meters))?"
+              name="distanceMeters"
+              type="number"
+              required
+              updateImmediately
+              value={this.props.activity ? this.props.activity.distanceMeters : 0}
+            /> <br />
             <FormsyText
               hintText="how far did you go (seconds)?"
               name="timeSeconds"
