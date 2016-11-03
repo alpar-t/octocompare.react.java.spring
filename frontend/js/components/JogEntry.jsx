@@ -67,6 +67,7 @@ const JogEntry = ({ activity, onRemove, onAddOrEdit }) => <Card
 </Card>;
 
 JogEntry.propTypes = {
+  /* eslint-disable react/no-unused-prop-types */
   activity: React.PropTypes.shape({
     id: React.PropTypes.string,
     date: MomentProperty,

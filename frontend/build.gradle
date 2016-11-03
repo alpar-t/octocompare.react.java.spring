@@ -31,6 +31,21 @@ task test(type: NpmTask) {
     outputs.file file("$buildDir/test_results.json")
 }
 
+task lint(type: NpmTask) {
+    def lintReport = file("$buildDir/lint_report")
+    dependsOn npm_install
+    args = [ 'run', 'lint' ]
+    inputs.file file('package.json')
+    inputs.dir file('js')
+    inputs.file file('.eslintrc.js')
+    outputs.file lintReport
+    doFirst {
+        if (!lintReport.exists()){
+            lintReport.write("")
+        }
+    }
+}
+
 task compile(type: NpmTask) {    
     dependsOn npm_install
     args = [ 'run', 'build' ]
@@ -55,5 +70,6 @@ build {
 
 check {
     dependsOn test
+    dependsOn lint
 }
 
