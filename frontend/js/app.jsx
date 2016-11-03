@@ -12,6 +12,7 @@ import Toolbar from 'joggr/components/Toolbar';
 import WeeklyReport from 'joggr/components/WeeklyReport';
 import JogEntryList from 'joggr/components/JogEntryList';
 import LoginDialog from 'joggr/components/LoginDialog';
+import MessageDrivenSnackbar from 'joggr/components/MessageDrivenSnackbar';
 
 import {
   store,
@@ -20,6 +21,7 @@ import {
   toggleWeeklyReport,
   updateFilters,
   login, logout,
+  postMessage,
 } from 'joggr/state';
 
 // Needed for onTouchTap
@@ -60,10 +62,17 @@ const ConnectedLoginDialog = connect(({
   username,
 }))(LoginDialog);
 
+const ConnectedMessageDrivenSnackbar = connect(({ message }) => ({
+  message,
+}))(MessageDrivenSnackbar);
+
 const AppTemplate = ({ dispatch }) => <div style={{ maxWidth: '1200px' }}>
+
   <ConnectedLoginDialog
     onLogin={credentials => dispatch(login(credentials))}
+    onFailed={message => dispatch(postMessage(message))}
   />
+  <ConnectedMessageDrivenSnackbar />
   <ConnectedTopBar
     onLogout={() => dispatch(logout())}
   />
@@ -71,7 +80,6 @@ const AppTemplate = ({ dispatch }) => <div style={{ maxWidth: '1200px' }}>
     <h1 style={{ color: colors.grey700 }}>
       Logged activities
     </h1>
-
     <ConnectedToolbar
       onAddOrEdit={
         (entry) => {

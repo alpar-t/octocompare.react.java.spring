@@ -67,11 +67,20 @@ export function regsiter({ username, password }) {
   };
 }
 
+export const POST_MESSAGE = 'POST_MESSAGE';
+export function postMessage(message = '') {
+  return {
+    type: POST_MESSAGE,
+    message,
+  };
+}
+
 const defaultState = {
   allJogEntries: {},
   jogEntries: new JogEntryList(),
   options: new JogEntryViewOptions(),
   credentials: new Credentials(),
+  message: '',
 };
 
 function syncedJogEntries(reducerFunc) {
@@ -97,6 +106,10 @@ function reducer(state, action) {
     case TOGGLE_WEEKLY_REPORT:
       return Object.assign({}, state, {
         options: state.options.withToggledShow(),
+      });
+    case POST_MESSAGE:
+      return Object.assign({}, state, {
+        message: action.message,
       });
     case UPDATE_FILTERS: {
       const updatedOptions = state.options.withFilters(
@@ -153,5 +166,8 @@ persistStore(
   store,
   {
     blacklist: ['jogEntries'],
+  },
+  () => {
+    store.dispatch(toggleWeeklyReport());
   }
 );
