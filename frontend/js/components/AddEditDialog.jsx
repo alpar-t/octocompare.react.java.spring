@@ -31,7 +31,11 @@ export default class AddEditDialog extends React.Component {
   }
 
   handleChange(model) {
-    this.setState({ model });
+    if (this.props.activity) {
+      this.setState({ model: Object.assign({}, this.props.activity.toJS(), model) });
+    } else {
+      this.setState({ model });
+    }
   }
 
   handleSubmit() {
@@ -65,8 +69,8 @@ export default class AddEditDialog extends React.Component {
     return (
       <span>
         <IconButton
-          iconClassName="fa fa-plus"
-          iconStyle={{ color: colors.blue700 }}
+          iconClassName={`fa fa-${this.props.activity ? 'pencil' : 'plus'}`}
+          iconStyle={{ color: this.props.activity ? colors.yellow700 : colors.blue700 }}
           onTouchTap={this.handleOpen}
         />
         <Dialog
@@ -85,7 +89,9 @@ export default class AddEditDialog extends React.Component {
             <FormsyDate
               floatingLabelText="When did you jog?"
               name="date"
-              defaultDate={moment().toDate()}
+              defaultDate={
+                this.props.activity ? this.props.activity.date.toDate() : moment().toDate()
+              }
               autoOk
             />
             <FormsyText
@@ -94,6 +100,7 @@ export default class AddEditDialog extends React.Component {
               type="number"
               required
               updateImmediately
+              value={this.props.activity ? this.props.activity.distanceMeters : 0}
             /> <br />
             <FormsyText
               hintText="how far did you go (seconds)?"
@@ -101,6 +108,7 @@ export default class AddEditDialog extends React.Component {
               type="number"
               required
               updateImmediately
+              value={this.props.activity ? this.props.activity.timeSeconds : 0}
             />
           </Formsy.Form>
         </Dialog>

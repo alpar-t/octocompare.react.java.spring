@@ -1,16 +1,24 @@
 import React from 'react';
 import JogEntry from 'joggr/components/JogEntry';
 
-const JogEntryList = ({ activities, onRemove }) => <div>
+const JogEntryList = ({ activities, onRemove, onAddOrEdit }) => <div>
   {
     activities.map(activity =>
-      <JogEntry activity={activity} key={activity.id} onRemove={onRemove} />
+      <JogEntry
+        activity={activity}
+        key={activity.id}
+        onRemove={onRemove}
+        onAddOrEdit={onAddOrEdit}
+      />
     )
   }
 </div>;
 
 JogEntryList.propTypes = {
-  activities: React.PropTypes.any,
+  activities: React.PropTypes.shape({
+  }),
+  onAddOrEdit: React.PropTypes.func,
+  onRemove: React.PropTypes.func,
 };
 
 export default JogEntryList;

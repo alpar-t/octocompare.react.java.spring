@@ -74,6 +74,11 @@ const AppTemplate = ({ dispatch }) => <div style={{ maxWidth: '1200px' }}>
       onRemove={(activity) => {
         dispatch(removeJogEntry(activity));
       }}
+      onAddOrEdit={
+        (entry) => {
+          dispatch(pushJogEntry(entry));
+        }
+      }
     />
   </Paper>
 </div>;

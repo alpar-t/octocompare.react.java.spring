@@ -8,6 +8,8 @@ import IconButton from 'material-ui/IconButton';
 
 import MomentProperty from 'joggr/components/MomentProperty';
 
+import AddEditDialog from 'joggr/components/AddEditDialog';
+
 const CardIcon = ({ name, color }) => (
   <Icon name={name} style={{ color, paddingRight: '1em' }} />
 );
@@ -16,7 +18,7 @@ CardIcon.propTypes = {
   color: React.PropTypes.string,
 };
 
-const JogEntry = ({ activity, onRemove }) => <Card
+const JogEntry = ({ activity, onRemove, onAddOrEdit }) => <Card
   expandable
   initiallyExpanded={false}
   style={{
@@ -43,8 +45,8 @@ const JogEntry = ({ activity, onRemove }) => <Card
       </div>
       <div>
         <CardIcon name="clock-o" color={colors.orange700} />
-        {(activity.timeSeconds / 60).toFixed()}m&nbsp;
-        {activity.timeSeconds - (((activity.timeSeconds / 60).toFixed()) * 60)}s
+        {Math.floor(activity.timeSeconds / 60)}m&nbsp;
+        {activity.timeSeconds - ((Math.floor(activity.timeSeconds / 60)) * 60)}s
       </div>
       <div>
         <CardIcon name="rocket" color={colors.deepOrange700} />
@@ -54,10 +56,7 @@ const JogEntry = ({ activity, onRemove }) => <Card
   </CardText>
   <CardActions style={{ position: 'absolute', top: 0, right: 0 }}>
     <div style={{ fontSize: '18pt' }}>
-      <IconButton
-        iconClassName="fa fa-pencil"
-        iconStyle={{ color: colors.yellow700 }}
-      />
+      <AddEditDialog onAddOrEdit={onAddOrEdit} activity={activity} />
       <IconButton
         iconClassName="fa fa-remove"
         iconStyle={{ color: colors.red900 }}
@@ -76,6 +75,7 @@ JogEntry.propTypes = {
     speedKMpH: React.PropTypes.func,
   }),
   onRemove: React.PropTypes.func,
+  onAddOrEdit: React.PropTypes.func,
 };
 
 export default JogEntry;

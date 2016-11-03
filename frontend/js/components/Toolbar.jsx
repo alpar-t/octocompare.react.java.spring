@@ -50,6 +50,7 @@ Toolbar.propTypes = {
   filterDateFrom: React.PropTypes.instanceOf(moment),
   onAddOrEdit: React.PropTypes.func,
   onTogleWeeklyReport: React.PropTypes.func,
+  onDateFiltersUpdate: React.PropTypes.func,
 };
 
 export default Toolbar;

@@ -52,7 +52,9 @@ export class JogEntryList extends Immutable.Record({
   }
 
   addOrReplace(entry) {
-    return new JogEntryList(this.delegate.push(entry));
+    return new JogEntryList(
+      this.remove(entry).delegate.push(entry)
+    );
   }
 
   remove(entry) {
