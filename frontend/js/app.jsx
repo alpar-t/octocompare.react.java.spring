@@ -11,12 +11,15 @@ import TopBar from 'joggr/components/TopBar';
 import Toolbar from 'joggr/components/Toolbar';
 import WeeklyReport from 'joggr/components/WeeklyReport';
 import JogEntryList from 'joggr/components/JogEntryList';
+import LoginDialog from 'joggr/components/LoginDialog';
+
 import {
   store,
   pushJogEntry,
   removeJogEntry,
   toggleWeeklyReport,
   updateFilters,
+  login, logout,
 } from 'joggr/state';
 
 // Needed for onTouchTap
@@ -45,8 +48,25 @@ const ConnectedToolbar = connect(({
   })
 )(Toolbar);
 
+const ConnectedTopBar = connect(({ credentials: { username } }) => ({
+  username,
+}))(TopBar);
+
+const ConnectedLoginDialog = connect(({
+  credentials: {
+    username,
+  },
+}) => ({
+  username,
+}))(LoginDialog);
+
 const AppTemplate = ({ dispatch }) => <div style={{ maxWidth: '1200px' }}>
-  <TopBar />
+  <ConnectedLoginDialog
+    onLogin={credentials => dispatch(login(credentials))}
+  />
+  <ConnectedTopBar
+    onLogout={() => dispatch(logout())}
+  />
   <Paper style={{ padding: '2ex', margin: '1ex' }}>
     <h1 style={{ color: colors.grey700 }}>
       Logged activities

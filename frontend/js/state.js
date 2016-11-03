@@ -2,12 +2,13 @@ import { createStore } from 'redux';
 import persistState from 'redux-localstorage';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import { JogEntry, JogEntryList, JogEntryViewOptions } from 'joggr/model';
+import { JogEntry, JogEntryList, JogEntryViewOptions, Credentials } from 'joggr/model';
 
 const PUSH_JOG_ENTRY = 'PUSH_JOG_ENTRY';
 const REMOVE_JOG_ENTRY = 'REMOVE_JOG_ENTRY';
 const TOGGLE_WEEKLY_REPORT = 'TOGGLE_WEEKLY_REPORT';
 const UPDATE_FILTERS = 'UPDATE_FILTERS';
+const LOGIN_OR_REGISTER = 'LOGIN_OR_REGISTER';
 
 export function pushJogEntry(entry) {
   return {
@@ -37,9 +38,36 @@ export function updateFilters(filterDateFrom, filterDateTo) {
   };
 }
 
+export function login({ username, password }) {
+  return {
+    type: LOGIN_OR_REGISTER,
+    new_user: false,
+    username,
+    password,
+  };
+}
+
+export function logout() {
+  return {
+    type: LOGIN_OR_REGISTER,
+    new_user: false,
+    username: '',
+    password: '',
+  };
+}
+
+export function regsiter({ username, password }) {
+  return {
+    type: LOGIN_OR_REGISTER,
+    new_user: true,
+    username,
+    password,
+  };
+}
+
 const defaultState = {
-  jogEntries: new JogEntryList(),
   options: new JogEntryViewOptions(),
+  credentials: new Credentials(),
 };
 
 function reducer(state, action) {
@@ -63,6 +91,11 @@ function reducer(state, action) {
       return Object.assign({}, state, {
         options: updatedOptions,
         jogEntries: state.jogEntries.makrDateVisibility(updatedOptions),
+      });
+    }
+    case LOGIN_OR_REGISTER: {
+      return Object.assign({}, state, {
+        credentials: new Credentials(action),
       });
     }
     default:

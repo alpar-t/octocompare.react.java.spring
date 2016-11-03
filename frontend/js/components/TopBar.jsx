@@ -6,20 +6,27 @@ import {
 import { Icon } from 'react-fa';
 import FontIcon from 'material-ui/FontIcon';
 
-export default () => <AppBar
+const TopBar = ({ username, onLogout }) => <AppBar
   title="Joggr.io"
   iconElementRight={
     <Toolbar style={{ backgroundColor: 'inherit' }}>
       <ToolbarGroup>
         <FontIcon><Icon name="user" style={{ color: 'gray' }} /></FontIcon>
-        <ToolbarTitle text="Alpar Torok" style={{ marginLeft: '0.5em' }} />
+        <ToolbarTitle text={username} style={{ marginLeft: '0.5em' }} />
       </ToolbarGroup>
       <ToolbarGroup>
         <ToolbarSeparator />
-        <FontIcon><Icon name="sign-out" style={{ color: 'gray' }} /></FontIcon>
+        <FontIcon>
+          <Icon name="sign-out" style={{ color: 'gray' }} onTouchTap={onLogout} />
+        </FontIcon>
       </ToolbarGroup>
     </Toolbar>
   }
   style={{
   }}
 />;
+TopBar.propTypes = {
+  username: React.PropTypes.string,
+  onLogout: React.PropTypes.func,
+};
+export default TopBar;

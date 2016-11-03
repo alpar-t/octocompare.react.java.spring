@@ -153,3 +153,10 @@ export class JogEntryViewOptions extends Immutable.Record({
     ));
   }
 }
+
+export class Credentials extends Immutable.Record({
+  username: '',
+  password: '',
+}) {
+
+}
