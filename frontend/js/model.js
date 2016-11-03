@@ -33,7 +33,11 @@ export class JogEntry extends Immutable.Record({
 
   withAdjustedVisibility(filterDateFrom, filterDateTo) {
     return new JogEntry(Object.assign(this.toJS(), {
-      visible: this.date.isBefore(filterDateTo) && this.date.isAfter(filterDateFrom),
+      visible: this.date.isBefore(
+        moment(filterDateTo).add(1, 'days')
+      ) && this.date.isAfter(
+        filterDateFrom
+      ),
     }));
   }
 }
