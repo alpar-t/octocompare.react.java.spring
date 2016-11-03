@@ -1,0 +1,19 @@
+plugins {
+      id "com.moowork.node" version "0.13"
+}
+apply plugin: "base"
+
+task run(type: NpmTask) {
+    dependsOn npm_install
+    args = [ 'test' ]
+    inputs.file file('package.json')
+    inputs.file file('index.js')
+    outputs.file file("$buildDir/log.xml")
+    execOverrides {
+        it.environment("PATH", "${file("node_modules/.bin")}${File.pathSeparator}${System.env.PATH}")
+    }
+}
+
+check {
+    dependsOn run
+}
