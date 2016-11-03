@@ -50,7 +50,7 @@ No pagination: TODO: why
  
 No router: TODO: why
 
-Back End
+ Back End
 --------
 
 The back-end is a [spring boot](https://spring.io/guides/gs/spring-boot/) application
@@ -65,6 +65,9 @@ allowing us to show an initial demo sooner, and save on development cost without
 
 Authentication and roles are implemented using
 [spring-security](http://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle).
+
+A management API is [also accessible](http://127.0.0.1:8080/manage/) only from local host
+including over [ipv6](http://[::1]:8080/manage).
 
 Resources
 ---------

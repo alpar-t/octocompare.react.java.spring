@@ -18,9 +18,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                 .authorizeRequests()
+                .authorizeRequests()
                      .antMatchers("/users/signUp/**").permitAll()
-                 .and().authorizeRequests()
+                .and().authorizeRequests()
+                    .antMatchers("/manage/**").access("hasIpAddress('127.0.0.1') or hasIpAddress('[::1]')")
+                .and().authorizeRequests()
                     .anyRequest().authenticated()
                 .and()
                     .httpBasic()
