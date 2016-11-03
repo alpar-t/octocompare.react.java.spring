@@ -12,9 +12,6 @@ task run(type: NpmTask) {
     execOverrides {
         it.environment("PATH", "${file("node_modules/.bin")}${File.pathSeparator}${System.env.PATH}")
     }    
-    doLast {
-        spawn.end()
-    }
 }
 run.spawn {
     process {
