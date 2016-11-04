@@ -5,6 +5,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.Date;
 import java.util.List;
 
 @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER') or hasRole('ROLE_USER')")
@@ -56,6 +57,9 @@ public interface JogEntryRepository extends CrudRepository<JogEntry, String> {
 
     @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER') or #userName == authentication?.name")
     List<JogEntry> findByUserName(@Param("userName") String userName);
+
+    @PreAuthorize("hasRole('ROLE_CONTENT_MANAGER') or #userName == authentication?.name")
+    List<JogEntry> findByUserNameAndUpdatedGreaterThan(@Param("userName") String userName, @Param("updated") Date lastDate);
 
     @PreAuthorize("hasRole('ROLE_INTERNAL')")
     @RestResource(exported = false)
