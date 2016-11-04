@@ -1,4 +1,5 @@
 import { createStore } from 'redux';
+import moment from 'moment';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { REHYDRATE } from 'redux-persist/constants';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -75,12 +76,21 @@ export function postMessage(message = '') {
   };
 }
 
+export const MARK_PULL = 'MARK_PULL';
+export function markPull() {
+  return {
+    type: MARK_PULL,
+    lastPull: moment(),
+  };
+}
+
 const defaultState = {
   allJogEntries: {},
   jogEntries: new JogEntryList(),
   options: new JogEntryViewOptions(),
   credentials: new Credentials(),
   message: '',
+  lastPull: null,
 };
 
 function syncedJogEntries(reducerFunc) {
@@ -111,6 +121,10 @@ function reducer(state, action) {
       return Object.assign({}, state, {
         message: action.message,
       });
+    case MARK_PULL:
+      return Object.assign({}, state, {
+        lastPull: action.lastPull,
+      });
     case UPDATE_FILTERS: {
       const updatedOptions = state.options.withFilters(
         action.filterDateFrom, action.filterDateTo
@@ -138,12 +152,14 @@ function reducer(state, action) {
       const jogEntries = JogEntryList.fromJS(
         allJogEntries ? allJogEntries[credentials.username] : {}
       ).makrDateVisibility(options);
+      const lastPull = incoming.lastPull ? moment(incoming.lastPull) : defaultState.lastPull;
       if (incoming) {
         return {
           jogEntries,
           options,
           credentials,
           allJogEntries,
+          lastPull,
         };
       }
       return state;
@@ -155,6 +171,47 @@ function reducer(state, action) {
       return state;
     }
   }
+}
+
+function pullFromServer(store) {
+  const state = store.getState();
+  if (!(state.credentials && state.credentials.username)) {
+    return;
+  }
+  if (state.message) {
+    return;
+  }
+  const combinedCredentials = `${state.credentials.username}:${state.credentials.password}`;
+  const isoDate = state.lastPull ? state.lastPull.format('YYYY-MM-DD HH:mm:ss') : null;
+  const urlWithLastFetch = `jogEntries/search/findByUserNameAndUpdatedGreaterThan?userName=${state.credentials.username}&updated=${isoDate}`;
+  const urlForAll = `jogEntries/search/findByUserName?userName=${state.credentials.username}`;
+  /* global window */
+  window.fetch(
+    isoDate ? urlWithLastFetch : urlForAll,
+    {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${new Buffer(combinedCredentials).toString('base64')}`,
+      },
+      credentials: 'omit',
+    }
+  )
+  .then(response => response.json())
+  .then((json) => {
+    if (json.message) {
+      store.dispatch(postMessage(`Failed to get jog entries: ${json.message}`));
+    } else {
+      store.dispatch(markPull());
+      /* eslint-disable no-underscore-dangle */
+      json._embedded.jogEntries.map(entry =>
+        store.dispatch(
+          pushJogEntry(Object.assign(entry, { knownByServer: true }))
+        )
+      );
+      /* eslint-enable no-underscore-dangle */
+    }
+  });
 }
 
 export const store = createStore(
@@ -169,10 +226,9 @@ persistStore(
   {
     blacklist: ['jogEntries'],
   },
-  () => {
-    store.dispatch(toggleWeeklyReport());
-  }
+  () => pullFromServer(store)
 );
+window.setInterval(() => pullFromServer(store), 5000);
 
 store.subscribe(() => {
   const state = store.getState();
@@ -196,6 +252,34 @@ store.subscribe(() => {
     ).then((response) => {
       if (response.ok) {
         store.dispatch(pushJogEntry(entryToSave.toJS()));
+      }
+      return response.json();
+    })
+    .then((json) => {
+      if (json.error && !state.message) {
+        store.dispatch(postMessage(`Failed to update jog enty: ${json.message}`));
+      }
+    });
+  }
+
+  const entryToRemove = state.jogEntries.pendingRemoval().first();
+  if (entryToRemove) {
+    const combinedCredentials = `${state.credentials.username}:${state.credentials.password}`;
+    /* global window */
+    window.fetch(
+      `jogEntries/${entryToRemove.id}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${new Buffer(combinedCredentials).toString('base64')}`,
+        },
+        method: 'delete',
+        credentials: 'omit',
+      }
+    ).then((response) => {
+      if (response.ok) {
+        store.dispatch(pushJogEntry(entryToRemove.toJS()));
       }
       return response.json();
     })

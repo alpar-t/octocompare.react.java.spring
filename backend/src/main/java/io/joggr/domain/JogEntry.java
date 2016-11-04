@@ -19,8 +19,8 @@ public class JogEntry {
     final private Date date;
     private String userName;
 
-    public @Version Long version;
-    public @LastModifiedDate Date updated;
+    private @Version Long version;
+    private @LastModifiedDate Date updated;
 
     protected JogEntry() {
         this(0, 0);
