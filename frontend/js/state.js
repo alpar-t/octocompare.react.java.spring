@@ -173,3 +173,36 @@ persistStore(
     store.dispatch(toggleWeeklyReport());
   }
 );
+
+store.subscribe(() => {
+  const state = store.getState();
+  // only take the first one, when we dispatch the result, next one will pick up
+  const entryToSave = state.jogEntries.pendingSave().first();
+  if (entryToSave) {
+    const combinedCredentials = `${state.credentials.username}:${state.credentials.password}`;
+    /* global window */
+    window.fetch(
+      `jogEntries/${entryToSave.id}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${new Buffer(combinedCredentials).toString('base64')}`,
+        },
+        body: JSON.stringify(entryToSave.toJS()),
+        method: 'put',
+        credentials: 'omit',
+      }
+    ).then((response) => {
+      if (response.ok) {
+        store.dispatch(pushJogEntry(entryToSave.toJS()));
+      }
+      return response.json();
+    })
+    .then((json) => {
+      if (json.error && !state.message) {
+        store.dispatch(postMessage(`Failed to update jog enty: ${json.message}`));
+      }
+    });
+  }
+});

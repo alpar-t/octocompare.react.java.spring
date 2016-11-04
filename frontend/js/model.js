@@ -70,7 +70,6 @@ export class JogEntry extends Immutable.Record({
 
 export class JogEntryList extends Immutable.Record({
   delegate: [],
-  username: '',
 }) {
   static fromJS(js) {
     if (js && js.delegate) {
@@ -167,11 +166,11 @@ export class JogEntryList extends Immutable.Record({
   }
 
   first() {
-    return this.all().get(0);
+    return this.delegate.get(0);
   }
 
   last() {
-    return this.all().get(-1);
+    return this.delegate.get(-1);
   }
 }
 

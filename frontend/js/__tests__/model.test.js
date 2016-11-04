@@ -61,8 +61,10 @@ describe('JogEntry', () => {
       distanceMeters: 20,
       timeSeconds: 30,
       date: someTime,
+      knownByServer: true,
     });
     expect(entry.visible).toEqual(false);
+    expect(entry.knownByServer).toEqual(true);
     expect(entry.distanceMeters).toEqual(20);
     expect(entry.timeSeconds).toEqual(30);
     expect(entry.date).toEqual(someTime);
@@ -139,6 +141,14 @@ describe('JogEntryList', () => {
 
   it('Construct empty', () => {
     expect(empty.all().size).toEqual(0);
+  });
+
+  it('pendingSave', () => {
+    const entry = new JogEntry();
+    const testee = new JogEntryList([entry]);
+    expect(testee.pendingSave().first().knownByServer).toEqual(true);
+    const allKnown = testee.addOrReplace(testee.pendingSave().first());
+    expect(allKnown.pendingSave().delegate.size).toEqual(0);
   });
 
   it('Construct non empty', () => {

@@ -40,7 +40,7 @@ export default class AddEditDialog extends React.Component {
 
   handleSubmit() {
     if (this.state.valid) {
-      this.props.onAddOrEdit(this.state.model);
+      this.props.onAddOrEdit(Object.assign({}, this.state.model, { knownByServer: false }));
       this.handleClose();
     }
   }
