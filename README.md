@@ -1,5 +1,5 @@
 About
------
+=====
 
 joggr.io is an application that tracks jogging times of users.
 
@@ -23,10 +23,54 @@ All actions need to be done client side using AJAX, refreshing the page is not a
 Bonus: unit and e2e tests!
 You will not be marked on graphic design, however, do try to keep it as tidy as possible.
 
-Non features:
--------------
+Bonus feature: jog entries can be entered while the server is down and will be sent as it comes back
+up.
 
-- [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) support.
+How To use 
+==========
+
+JDK Version 8 is required.
+Start the app with:
+    
+    ./gradlew bootRun
+
+Navigate to (http://127.0.0.1:8080/).
+Authenticate with user name 'admin' and password 'password' when asked. 
+You can then register additional users, or use the same on the login prompt. 
+The first authentication is not part of the app, but it was kept to prevent 
+accidental exposure. 
+Thus the double authentication.
+
+Known issues and limitations:
+------------------------------
+
+The application is not as it stand ready for production.
+It's meant to be a proof of concept for initial validation.
+Taking the application to production will require additional steps.
+
+- No [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) support.
+- No browser support matrix is defined, no cross browser testing was done 
+- uses volatile embedded database, changes are not persisted across application restarts
+- end to end tests are minimal
+- removing job entires are not correctly carried across different clients of the same user.
+    - the client pulls for updates
+- the app was not particularity tested for large scale. 
+    - the client pulling can particularity prove limiting. A push model would be desirable.
+- the back-end has no pagination support 
+    - it's assumed that the per user volumes will not exceed network transfer and browser
+        capabilities (the volume of per user data is of acceptable size to send over the network and
+        keep in browser memory).
+    - clients use local storage to prevent from re-fetching content that did not change.
+- back-end could use more functionality driven integration tests ( existing ones favor security ) 
+- no out of the box setup for a relational database ( but easily achievable ) 
+- frontend is not production ready: optimizations might still be needed, source-maps are exposed,
+    etc.
+- security aspects that need to be considered for production
+    - credentials are sent in clear over the network ( http basic authentication ) 
+    - credentials are persisted in the front-end in clear ( stored to local storage as well )
+    - JWT tokens should be implemented as a next step.
+- the application is not stopped after running end to end tests
+    - it's left running in the background and has to be killed manually
 
 Developer Notes
 ===============
@@ -43,14 +87,27 @@ To run all tests on both ends:
 
     ./gradlew check
 
+Set up git hooks to make sure commits and pushes are sane:
+    
+    ./git/create_hooks.sh
+
 Front End
 ---------
 
-No pagination: TODO: why
- 
-No router: TODO: why
+Single page [react](https://facebook.github.io/react/) with [redux](http://redux.js.org/) to manage state.
+No router is used. 
+UX is implemented using [material-ui](http://www.material-ui.com/).
+Everything is built with [webpack](https://webpack.github.io/).
 
- Back End
+The front-end is meant to be decoupled. 
+It manages it's own state and has it's own model.
+Interaction with the back-end is via pooling for server state periodically to merge in new
+entries, and pushing state changes back to the server when the client state changes. 
+
+The back-end also servers up the files for the front-end, but this is just as a convenience. 
+The front-end could be fully served from a CDN.
+
+Back End
 --------
 
 The back-end is a [spring boot](https://spring.io/guides/gs/spring-boot/) application
@@ -69,11 +126,7 @@ Authentication and roles are implemented using
 A management API is [also accessible](http://127.0.0.1:8080/manage/) only from local host
 including over [ipv6](http://[::1]:8080/manage).
 
-Resources
----------
-
-- [JWT and Spring](https://www.toptal.com/java/rest-security-with-jwt-spring-security-and-java) on Toptal blog.
-
+ 
 TODO
 ----
 
