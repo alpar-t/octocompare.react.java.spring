@@ -26,6 +26,33 @@ describe('JogEntry', () => {
     expect(entry.visible).toEqual(true);
     expect(entry.distanceMeters).toEqual(1);
     expect(entry.timeSeconds).toEqual(1);
+    expect(entry.knownByServer).toEqual(false);
+    expect(entry.markedForRemove).toEqual(false);
+    expect(entry.removedOnServer).toEqual(false);
+  });
+
+  it('Known by server', () => {
+    const entry = new JogEntry().withKnownByServer();
+    expect(entry.knownByServer).toEqual(true);
+    expect(entry.markedForRemove).toEqual(false);
+    expect(entry.removedOnServer).toEqual(false);
+    expect(entry.visible).toEqual(true);
+  });
+
+  it('Marked for remove', () => {
+    const entry = new JogEntry().withKnownByServer().withMarkForRemove();
+    expect(entry.knownByServer).toEqual(true);
+    expect(entry.markedForRemove).toEqual(true);
+    expect(entry.removedOnServer).toEqual(false);
+    expect(entry.visible).toEqual(false);
+  });
+
+  it('remove from server', () => {
+    const entry = new JogEntry().withKnownByServer().withRemovedOnServer();
+    expect(entry.knownByServer).toEqual(false);
+    expect(entry.markedForRemove).toEqual(true);
+    expect(entry.removedOnServer).toEqual(true);
+    expect(entry.visible).toEqual(false);
   });
 
   it('Custom values', () => {

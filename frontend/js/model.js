@@ -12,6 +12,8 @@ export class JogEntry extends Immutable.Record({
   distanceMeters: 1,
   visible: true,
   markedForRemove: false,
+  knownByServer: false,
+  removedOnServer: false,
 }) {
   constructor(props) {
     if (props) {
@@ -45,6 +47,21 @@ export class JogEntry extends Immutable.Record({
 
   withMarkForRemove() {
     return new JogEntry(Object.assign(this.toJS(), {
+      visible: false,
+      markedForRemove: true,
+    }));
+  }
+
+  withKnownByServer() {
+    return new JogEntry(Object.assign(this.toJS(), {
+      knownByServer: true,
+    }));
+  }
+
+  withRemovedOnServer() {
+    return new JogEntry(Object.assign(this.toJS(), {
+      knownByServer: false,
+      removedOnServer: true,
       visible: false,
       markedForRemove: true,
     }));
@@ -90,6 +107,24 @@ export class JogEntryList extends Immutable.Record({
       this.delegate.map(it =>
         it.withAdjustedVisibility(options.filterDateFrom, options.filterDateTo)
       )
+    );
+  }
+
+  pendingRemoval() {
+    return new JogEntryList(
+      this.delegate.filter(it =>
+        !it.removedOnServer && it.markedForRemove
+      )
+      .map(it => it.withRemovedOnServer())
+    );
+  }
+
+  pendingSave() {
+    return new JogEntryList(
+      this.delegate.filter(it =>
+        !it.knownByServer && !it.removedOnServer && !it.markedForRemove
+      )
+      .map(it => it.withKnownByServer())
     );
   }
 
