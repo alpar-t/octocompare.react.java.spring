@@ -73,4 +73,12 @@ public class JogEntry {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
 }
