@@ -6,7 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Formsy from 'formsy-react';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
 
-const LoginDialog = ({ username, onLogin, onRegister, onFailed }) => <Dialog
+const LoginDialog = ({ username, onLogin, onFailed }) => <Dialog
   modal
   open={username === ''}
   overlayStyle={{ backgroundColor: colors.grey50 }}
@@ -25,6 +25,7 @@ const LoginDialog = ({ username, onLogin, onRegister, onFailed }) => <Dialog
                 'Content-Type': 'application/json',
                 Authorization: `Basic ${new Buffer(combinedCredentials).toString('base64')}`,
               },
+              credentials: 'omit',
             }
           ).then((response) => {
             if (response.ok) {
@@ -52,7 +53,33 @@ const LoginDialog = ({ username, onLogin, onRegister, onFailed }) => <Dialog
       </Formsy.Form>
     </Tab>
     <Tab label="Register" >
-      <Formsy.Form onValidSubmit={onRegister} >
+      <Formsy.Form
+        onValidSubmit={(credentials) => {
+          /* global window */
+          window.fetch(
+            `users/signUp/${credentials.username}`,
+            {
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: credentials.password,
+              method: 'post',
+              credentials: 'omit',
+            }
+          ).then((response) => {
+            if (response.ok) {
+              onLogin(credentials);
+            }
+            return response.json();
+          })
+          .then((json) => {
+            if (json.error) {
+              onFailed(`Registration failed: ${json.message}`);
+            }
+          });
+        }}
+      >
         <FormsyText
           hintText="username"
           name="username"
@@ -73,7 +100,6 @@ const LoginDialog = ({ username, onLogin, onRegister, onFailed }) => <Dialog
 </Dialog>;
 LoginDialog.propTypes = {
   username: React.PropTypes.string,
-  onRegister: React.PropTypes.func,
   onLogin: React.PropTypes.func,
   onFailed: React.PropTypes.func,
 };
