@@ -63,6 +63,6 @@ public interface JogEntryRepository extends CrudRepository<JogEntry, String> {
 
     @PreAuthorize("hasRole('ROLE_INTERNAL')")
     @RestResource(exported = false)
-    JogEntry findByIdAndUserName(String id, String userName);
+    JogEntry findById(String id);
 
 }

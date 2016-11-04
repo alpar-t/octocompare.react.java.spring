@@ -104,13 +104,13 @@ public class BaseIntegrationTest {
                 .build();
 
         unauthorised = (new ResponseSpecBuilder())
-                .expectBody("error", equalTo("Unauthorized"))
                 .expectStatusCode(401)
+                .expectBody("error", equalTo("Unauthorized"))
                 .build();
 
         forbidden = (new ResponseSpecBuilder())
-                .expectBody("error", equalTo("Forbidden"))
                 .expectStatusCode(403)
+                .expectBody("error", equalTo("Forbidden"))
                 .build();
     }
 }

@@ -19,7 +19,7 @@ public class JogEntriesIT extends BaseIntegrationTest {
     public static final int ANY_DURRATION = 600;
 
     @Test
-    public void userCanCreateJogEntries() {
+    public void userCanPOSTJogEntries() {
         createJogEntries(ROLE_USER);
     }
     private String createJogEntries(Roles asRole) {
@@ -55,6 +55,37 @@ public class JogEntriesIT extends BaseIntegrationTest {
                 .body("userName", equalTo(asRole.name()))
         ;
         return path;
+    }
+
+    @Test
+    public void userCanPUTJogEntries() {
+
+        JogEntry jogEntry = new JogEntry(ANY_DISTANCE, ANY_DURRATION);
+
+        given()
+                .spec(userWithRole.get(ROLE_USER))
+                .contentType(ContentType.JSON)
+                .pathParam("jogId", jogEntry.getId())
+                .body(jogEntry)
+        .when()
+                .put("/jogEntries/{jogId}")
+        .then()
+                .log().all()
+                .statusCode(201)
+        ;
+
+        given()
+                .spec(userWithRole.get(ROLE_USER))
+                .pathParam("jogId", jogEntry.getId())
+        .when()
+                .get("/jogEntries/{jogId}")
+        .then()
+                .statusCode(200)
+                .body("distanceMeters", equalTo(ANY_DISTANCE))
+                .body("timeSeconds", equalTo(ANY_DURRATION))
+                .body("userName", equalTo(ROLE_USER.name()))
+        ;
+
     }
 
     @Test
@@ -216,12 +247,12 @@ public class JogEntriesIT extends BaseIntegrationTest {
 
         given()
                 .spec(userWithRole.get(ROLE_USER))
+                .contentType(ContentType.JSON)
         .when()
                 .get(pathToEntry)
         .then()
-                // if there's no such ID we'll return forbidden instead of not found so one can't gather intel on
-                // available IDs
-                .spec(forbidden)
+                .log().all()
+                .statusCode(404)
         ;
     }
 

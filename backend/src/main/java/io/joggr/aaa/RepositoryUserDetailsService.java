@@ -22,12 +22,12 @@ public class RepositoryUserDetailsService implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try (AsInternalUser __ = new AsInternalUser()) {
-            logger.info("Looking up {}", username);
             User one = users.findOne(username);
-            logger.info("Found: {}", one);
             if (one == null) {
+                logger.info("No such user: {}", username);
                 throw new UsernameNotFoundException("No such user");
             }
+            logger.info("Authenticated: {}", one);
             return one;
         }
     }

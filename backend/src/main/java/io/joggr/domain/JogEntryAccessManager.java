@@ -23,12 +23,21 @@ public class JogEntryAccessManager {
         Objects.nonNull(jogId);
         Objects.nonNull(userName);
         try (AsInternalUser __ = new AsInternalUser()) {
-            JogEntry entry = jogEntries.findByIdAndUserName(jogId, userName);
+            JogEntry entry = jogEntries.findById(jogId);
             if (entry == null) {
-                logger.info("Denying access to jogId '{}' of user '{}' (did not find this)", jogId, userName);
-                return false;
-            } else {
+                logger.debug("Granting access to non existent record");
                 return true;
+            } else {
+                if (entry.getUserName().equals(userName)) {
+                    logger.debug("Access granted to {} for {}", jogId, userName);
+                    return true;
+                } else {
+                    logger.warn("Denying access to jogId '{}' for user '{}' (the entry is owned by {})",
+                            jogId, userName, entry.getUserName()
+                    );
+                    return false;
+                }
+
             }
         }
     }
