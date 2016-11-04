@@ -134,14 +134,16 @@ function reducer(state, action) {
       const incoming = action.payload;
       const options = new JogEntryViewOptions(incoming.options);
       const credentials = new Credentials(incoming.credentials);
+      const allJogEntries = incoming.allJogEntries;
       const jogEntries = JogEntryList.fromJS(
-        incoming.allJogEntries ? incoming.allJogEntries[credentials.username] : {}
+        allJogEntries ? allJogEntries[credentials.username] : {}
       ).makrDateVisibility(options);
       if (incoming) {
         return {
           jogEntries,
           options,
           credentials,
+          allJogEntries,
         };
       }
       return state;
