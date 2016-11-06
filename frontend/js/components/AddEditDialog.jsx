@@ -93,6 +93,7 @@ export default class AddEditDialog extends React.Component {
                 this.props.activity ? this.props.activity.date.toDate() : moment().toDate()
               }
               autoOk
+              container="inline"
             />
             <FormsyText
               hintText="how far did you go (meters))?"
