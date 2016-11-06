@@ -3,7 +3,7 @@ import moment from 'moment';
 import * as Immutable from 'immutable';
 /* eslint new-cap: 0*/
 
-const MPH_TO_KMPH = 3.6;
+const MPS_TO_KMPH = 3.6;
 
 export class JogEntry extends Immutable.Record({
   id: '',
@@ -31,7 +31,7 @@ export class JogEntry extends Immutable.Record({
   }
 
   speedKMpH() {
-    return ((this.distanceMeters / this.timeSeconds) * MPH_TO_KMPH);
+    return ((this.distanceMeters / this.timeSeconds) * MPS_TO_KMPH);
   }
 
   withAdjustedVisibility(filterDateFrom, filterDateTo) {
@@ -132,24 +132,30 @@ export class JogEntryList extends Immutable.Record({
   }
 
   reportSpeedPerWeek() {
-    const weekAndSpeed = this.all()
+    return this.reportAvg(entry => entry.speedKMpH()).map(
+      ({ avg, week }) => ({ speed: avg, week })
+    );
+  }
+
+  reportAvg(extractor) {
+    const weekAndAvg = this.all()
     .map(entry =>
-        ({ week: entry.date.week(), speed: entry.speedKMpH() })
+        ({ week: entry.date.week(), avg: extractor(entry) })
     )
     .reduce((collect, value) => {
       const ret = Object.assign({}, collect);
       if (ret[value.week]) {
-        ret[value.week].speed += value.speed;
+        ret[value.week].avg += value.avg;
         ret[value.week].count += 1.0;
       } else {
-        ret[value.week] = { speed: value.speed, count: 1.0 };
+        ret[value.week] = { avg: value.avg, count: 1.0 };
       }
       return ret;
     }, {});
 
-    return Object.keys(weekAndSpeed).map(week => ({
+    return Object.keys(weekAndAvg).map(week => ({
       week: parseInt(week, 10),
-      speed: weekAndSpeed[week].speed / weekAndSpeed[week].count,
+      avg: weekAndAvg[week].avg / weekAndAvg[week].count,
     }));
   }
 
