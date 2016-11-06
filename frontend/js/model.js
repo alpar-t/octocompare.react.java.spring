@@ -137,6 +137,12 @@ export class JogEntryList extends Immutable.Record({
     );
   }
 
+  reportDistancePerWeek() {
+    return this.reportAvg(entry => entry.distanceMeters).map(
+      ({ avg, week }) => ({ distance: avg, week })
+    );
+  }
+
   reportAvg(extractor) {
     const weekAndAvg = this.all()
     .map(entry =>

@@ -126,11 +126,10 @@ Authentication and roles are implemented using
 A management API is [also accessible](http://127.0.0.1:8080/manage/) only from local host
 including over [ipv6](http://[::1]:8080/manage).
 
- 
-TODO
+Todo
 ----
 
-http://projects.spring.io/spring-security/#quick-start
-https://docs.stormpath.com/java/spring-boot-web/
-https://www.isostech.com/blogs/software-development/adding-google-authentication-spring-security-application/
-
+Development is cumbersome right now, because we can not use the webpack dev server. 
+A Docker compose should be set up to run the frontend and backend independently and 
+connect them with a reverse proxy for increased developer productivity.
+ 

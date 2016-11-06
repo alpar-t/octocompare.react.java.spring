@@ -34,7 +34,8 @@ const ConnectedJogEntryList = connect(state => ({
 
 const ConnectedWeeklyReport = connect(state => ({
   expanded: state.options.showReport,
-  data: state.jogEntries.reportSpeedPerWeek(),
+  avgSpeed: state.jogEntries.reportSpeedPerWeek(),
+  avgDistance: state.jogEntries.reportDistancePerWeek(),
 }))(WeeklyReport);
 
 const ConnectedToolbar = connect(({
