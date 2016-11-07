@@ -36,10 +36,9 @@ Start the app with:
 
 Navigate to (http://127.0.0.1:8080/).
 Authenticate with user name 'admin' and password 'password' when asked. 
-You can then register additional users, or use the same on the login prompt. 
-The first authentication is not part of the app, but it was kept to prevent 
-accidental exposure. 
-Thus the double authentication.
+
+There is no UI for content managers and user administrators, but these operations can be executed
+trough the API. There's a built in [API browser](http://127.0.0.1:8080/browser/index.html#/).
 
 Known issues and limitations:
 ------------------------------
@@ -72,7 +71,7 @@ Taking the application to production will require additional steps.
 - the application is not stopped after running end to end tests
     - it's left running in the background and has to be killed manually
 
-Developer Notes
+Developer Note
 ===============
 
 The only pre-requisite to build and run is JDK version 8 and an internet connection.

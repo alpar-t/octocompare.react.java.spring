@@ -19,7 +19,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                     .antMatchers("/users/signUp/**").permitAll()
+                     .antMatchers(
+                             "/users/signUp/**",
+                             "/",
+                             "/index.html", "/*.js", "/*.js.map",
+                             "/*.svg", "/*.css", "/*.woff", "/*.woff2", "/*.eot", "/*.ttf"
+                     ).permitAll()
                 .and().authorizeRequests()
                     .antMatchers("/manage/**").access("hasIpAddress('127.0.0.1') or hasIpAddress('[::1]')")
                 .and().authorizeRequests()

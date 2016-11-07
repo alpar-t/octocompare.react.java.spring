@@ -94,8 +94,9 @@ public class UserSecurityPermissionsIT extends BaseIntegrationTest {
         logger.info("Show that the user can no longer authenticate with old password");
         given()
                 .spec(userWithRole.get(ROLE_USER))
+                .pathParam("userName", ROLE_USER.name())
         .when()
-                .get("/")
+                .get("/users/{userName}")
         .then()
                 .spec(unauthorised)
         ;

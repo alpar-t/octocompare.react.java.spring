@@ -48,16 +48,16 @@ public class BaseIntegrationTest {
     @Test
     public void checkBasicAccess() {
         when()
-                .get("/")
-                .then()
+                .get("/users")
+        .then()
                 .log().all()
                 .spec(unauthorised);
 
         given()
                 .spec(withAdminUser)
-                .when()
+        .when()
                 .get("/")
-                .then()
+        .then()
                 .log().all()
                 .statusCode(200);
     }

@@ -60,8 +60,9 @@ public class UserRegistrationIT extends BaseIntegrationTest {
         logger.info("And prove that the user can no longer authenticate");
         given()
                 .auth().basic(testUser, testPass)
+                .pathParam("userName", testUser)
         .when()
-                .get("/")
+                .get("/users/{userName}")
         .then()
                 .log().all()
                 .spec(unauthorised);
