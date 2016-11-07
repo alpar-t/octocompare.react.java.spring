@@ -20,7 +20,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                      .antMatchers(
-                             "/users/signUp/**",
+                             "/users/sign-up/**",
                              "/",
                              "/index.html", "/*.js", "/*.js.map",
                              "/*.svg", "/*.css", "/*.woff", "/*.woff2", "/*.eot", "/*.ttf"

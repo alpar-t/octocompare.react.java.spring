@@ -57,7 +57,7 @@ const LoginDialog = ({ username, onLogin, onFailed }) => <Dialog
         onValidSubmit={(credentials) => {
           /* global window */
           window.fetch(
-            `users/signUp/${credentials.username}`,
+            `users/sign-up/${credentials.username}`,
             {
               headers: {
                 Accept: 'application/json',

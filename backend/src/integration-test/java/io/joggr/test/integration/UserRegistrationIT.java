@@ -22,7 +22,7 @@ public class UserRegistrationIT extends BaseIntegrationTest {
                 .pathParam("userName", testUser)
                 .body(testPass)
         .when()
-                .post("users/signUp/{userName}")
+                .post("users/sign-up/{userName}")
         .then()
                 .log().all()
                 .statusCode(200);
@@ -32,7 +32,7 @@ public class UserRegistrationIT extends BaseIntegrationTest {
                 .pathParam("userName", testUser)
                 .body("testp-other")
         .when()
-                .post("users/signUp/{userName}")
+                .post("users/sign-up/{userName}")
         .then()
                 .log().all()
                 .statusCode(409);

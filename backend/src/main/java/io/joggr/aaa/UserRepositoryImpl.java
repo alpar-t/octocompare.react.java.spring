@@ -3,12 +3,10 @@ package io.joggr.aaa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
-@Service
 @RestController
 public class UserRepositoryImpl implements UserSignUpExtension {
 
@@ -24,7 +22,7 @@ public class UserRepositoryImpl implements UserSignUpExtension {
     }
 
     @Override
-    @RequestMapping(path = "/users/signUp/{username}", method= RequestMethod.POST)
+    @RequestMapping(path = "/users/sign-up/{username}", method= RequestMethod.POST)
     public User signUp(@PathVariable("username") String username, @RequestBody String password) throws UserAlreadyExistsException {
         try (AsInternalUser __ = new AsInternalUser()) {
             if (users.exists(username)) {
