@@ -30,6 +30,7 @@ const Toolbar = ({
         container="inline"
         autoOk
         defaultDate={filterDateFrom.toDate()}
+        maxDate={filterDateTo.toDate()}
         onChange={(event, value) => { onDateFiltersUpdate(value, null); }}
       />
       <DatePicker
@@ -38,6 +39,7 @@ const Toolbar = ({
         container="inline"
         autoOk
         defaultDate={filterDateTo.toDate()}
+        minDate={filterDateFrom.toDate()}
         onChange={(event, value) => { onDateFiltersUpdate(null, value); }}
       />
     </ToolbarGroup>
