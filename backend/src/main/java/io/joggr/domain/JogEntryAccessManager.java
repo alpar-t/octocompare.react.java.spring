@@ -20,8 +20,8 @@ public class JogEntryAccessManager {
     }
 
     public boolean canAccess(String jogId, String userName) {
-        Objects.nonNull(jogId);
-        Objects.nonNull(userName);
+        Objects.requireNonNull(jogId);
+        Objects.requireNonNull(userName);
         try (AsInternalUser __ = new AsInternalUser()) {
             JogEntry entry = jogEntries.findById(jogId);
             if (entry == null) {
