@@ -24,3 +24,7 @@ run.spawn {
 check {
     dependsOn run
 }
+
+clean {
+    delete 'node_modules'
+}
