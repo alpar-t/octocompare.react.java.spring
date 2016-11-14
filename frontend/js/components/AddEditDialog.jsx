@@ -8,7 +8,7 @@ import Formsy from 'formsy-react';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
 import FormsyDate from 'formsy-material-ui/lib/FormsyDate';
 
-import JogEntry from 'joggr/components/JogEntry';
+import JogEntry from 'octocompare/components/JogEntry';
 
 export default class AddEditDialog extends React.Component {
 

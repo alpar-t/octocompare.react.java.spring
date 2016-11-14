@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled=true)
 @SpringBootApplication
-@ComponentScan("io.joggr.*")
+@ComponentScan("com.github.atorok.*")
 public class Application {
 
     public static void main(String[] args) {

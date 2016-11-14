@@ -1,4 +1,4 @@
-import { JogEntry, JogEntryList, JogEntryViewOptions } from 'joggr/model';
+import { JogEntry, JogEntryList, JogEntryViewOptions } from 'octocompare/model';
 import moment from 'moment';
 
 const validEntry = new JogEntry();

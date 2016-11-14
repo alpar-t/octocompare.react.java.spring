@@ -1,5 +1,5 @@
 import React from 'react';
-import JogEntry from 'joggr/components/JogEntry';
+import JogEntry from 'octocompare/components/JogEntry';
 
 const JogEntryList = ({ activities, onRemove, onAddOrEdit }) => <div>
   {

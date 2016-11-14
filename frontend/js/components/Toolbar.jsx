@@ -5,7 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import DatePicker from 'material-ui/DatePicker';
 import { Toolbar as MaterialToolbar, ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar';
 
-import AddEditDialog from 'joggr/components/AddEditDialog';
+import AddEditDialog from 'octocompare/components/AddEditDialog';
 
 const Toolbar = ({
     showReport,

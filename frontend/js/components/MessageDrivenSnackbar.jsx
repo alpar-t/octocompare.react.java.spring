@@ -1,7 +1,7 @@
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 
-import { postMessage } from 'joggr/state';
+import { postMessage } from 'octocompare/state';
 
 const MessageDrivenSnackbar = ({ message, dispatch }) => <Snackbar
   open={Boolean(message)}

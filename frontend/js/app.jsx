@@ -7,12 +7,12 @@ import { colors } from 'material-ui/styles';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Provider, connect } from 'react-redux';
 
-import TopBar from 'joggr/components/TopBar';
-import Toolbar from 'joggr/components/Toolbar';
-import WeeklyReport from 'joggr/components/WeeklyReport';
-import JogEntryList from 'joggr/components/JogEntryList';
-import LoginDialog from 'joggr/components/LoginDialog';
-import MessageDrivenSnackbar from 'joggr/components/MessageDrivenSnackbar';
+import TopBar from 'octocompare/components/TopBar';
+import Toolbar from 'octocompare/components/Toolbar';
+import WeeklyReport from 'octocompare/components/WeeklyReport';
+import JogEntryList from 'octocompare/components/JogEntryList';
+import LoginDialog from 'octocompare/components/LoginDialog';
+import MessageDrivenSnackbar from 'octocompare/components/MessageDrivenSnackbar';
 
 import {
   store,
@@ -22,7 +22,7 @@ import {
   updateFilters,
   login, logout,
   postMessage,
-} from 'joggr/state';
+} from 'octocompare/state';
 
 // Needed for onTouchTap
 // Check: https://github.com/zilverline/react-tap-event-plugin

@@ -9,7 +9,7 @@ buildscript {
   }
 }
 
-group = "io.joggr"
+group = "com.github.atorok"
 allprojects {
 	apply plugin: "com.pledgecomputers.gradle.spawn"
     version = "0.1"

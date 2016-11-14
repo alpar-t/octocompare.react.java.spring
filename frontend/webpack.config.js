@@ -17,7 +17,7 @@ module.exports = {
     ],
     resolve: {
         alias: {
-            joggr: path.resolve(__dirname, 'js')
+            octocompare: path.resolve(__dirname, 'js')
         },
         extensions: ['', '.js', '.jsx']
     },

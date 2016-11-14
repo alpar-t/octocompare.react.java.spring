@@ -6,9 +6,9 @@ import { Icon } from 'react-fa';
 import { colors } from 'material-ui/styles';
 import IconButton from 'material-ui/IconButton';
 
-import MomentProperty from 'joggr/components/MomentProperty';
+import MomentProperty from 'octocompare/components/MomentProperty';
 
-import AddEditDialog from 'joggr/components/AddEditDialog';
+import AddEditDialog from 'octocompare/components/AddEditDialog';
 
 const CardIcon = ({ name, color }) => (
   <Icon name={name} style={{ color, paddingRight: '1em' }} />

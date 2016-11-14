@@ -4,7 +4,7 @@ import { persistStore, autoRehydrate } from 'redux-persist';
 import { REHYDRATE } from 'redux-persist/constants';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import { JogEntry, JogEntryList, JogEntryViewOptions, Credentials } from 'joggr/model';
+import { JogEntry, JogEntryList, JogEntryViewOptions, Credentials } from 'octocompare/model';
 
 
 const PUSH_JOG_ENTRY = 'PUSH_JOG_ENTRY';
