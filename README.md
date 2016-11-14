@@ -12,7 +12,7 @@ This implementation uses:
     - [Data](http://projects.spring.io/spring-data/) 
     - [Data Rest](http://docs.spring.io/spring-data/rest/docs/current/reference/html/)
 - [React.js](https://facebook.github.io/react/)
-- Redux in the back-end to track sport activities
+- [Redux](http://redux.js.org/docs/introduction/)
 - [material-ui](http://www.material-ui.com/)
 - [webpack](https://webpack.github.io/)
 
